@@ -45,11 +45,13 @@ PKG_CHECK_MODULES(GTKMM,
                   ,
 				 [AC_MSG_ERROR(gtkmm-2.0 is missing.)] )
 
-AC_ARG_WITH(expat,
-    [ --with-expat=<path> prefix of expat installation. e.g. /usr/local or /usr],
-    [EXPAT_PREFIX=$with_expat],
-    [EXPAT_PREFIX="/usr/"])
 
+AC_ARG_WITH(expat,
+            AS_HELP_STRING([--with-expat=DIR],
+                           [prefix of expat installation. e.g. /usr/local or /usr]),
+           [EXPAT_PREFIX=$with_expat],
+           [EXPAT_PREFIX="/usr/"]
+           )
 
 AC_SUBST(EXPAT_PREFIX)
 AC_CHECK_LIB(expat, XML_ParserCreate, , [AC_MSG_ERROR("Could not find expat in ${EXPAT_PREFIX}.")] , ["-L${EXPAT_PREFIX}/lib/"] )
@@ -94,9 +96,12 @@ AC_C_BIGENDIAN
 AC_CHECK_HEADERS(linux/types.h cstdlib unistd.h sys/sockio.h sys/sockio.h net/if.h netinet/in.h sys/ioctl.h)
 
 # Checks for header files.
-AC_CHECK_HEADERS(boost/call_traits.hpp boost/mpl/vector.hpp,
-				 ,
-				 [AC_MSG_ERROR("boost headers are missing.")])
+#AC_CHECK_HEADERS(boost/call_traits.hpp boost/mpl/vector.hpp,
+#				 ,
+#				 [AC_MSG_ERROR("boost headers are missing.")])
+
+
+AC_CHOOSE_BOOST([103100], , , , AC_MSG_ERROR([Boost required!]))
 
 
 # Checks for typedefs, structures, and compiler characteristics.

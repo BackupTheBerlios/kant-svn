@@ -66,7 +66,7 @@ namespace details
 	};
 
 	template <typename Current, typename End, typename Compound>
-	struct map_element : public map_element<typename Current::next, End, Compound>, 
+	struct map_element : public map_element<typename boost::mpl::next<Current>::type, End, Compound>, 
 						 public holder<typename Current::type,Compound>
 	{
 	};

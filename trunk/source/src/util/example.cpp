@@ -27,7 +27,6 @@
 #include <iostream>
 #include <string>
 #include <boost/mpl/vector.hpp>
-#include <boost/mpl/fold_backward.hpp>
 #include <boost/tuple/tuple.hpp>
 #include "property_map.h"
 using namespace boost;

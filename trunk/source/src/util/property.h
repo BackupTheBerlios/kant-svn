@@ -100,6 +100,21 @@ struct member_offset
 #include "getter.h"
 
 // fold_backward<seq, boost::tuples::null_type, boost::tuples::cons<_2, _1> >
+/*
+  getter bedient get aus der value_property!
+template <typename T>
+struct getter
+{
+
+	virtual 
+};
+
+template <typename T>
+struct setter
+{
+};
+*/
+
 template <typename T, typename Compound = mpl::void_>
 struct value_property
 {

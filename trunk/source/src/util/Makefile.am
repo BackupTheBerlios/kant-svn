@@ -11,5 +11,5 @@ noinst_HEADERS = container.h \
 bin_PROGRAMS = property_test
 
 property_test_SOURCES = example.cpp
-property_test_CXXFLAGS = -Wall -pedantic
+property_test_CXXFLAGS = -Wall -pedantic -I/usr/include/boost-1_32/
 

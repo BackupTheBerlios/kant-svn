@@ -44,16 +44,7 @@ subdir = src/serialize
 DIST_COMMON = $(noinst_HEADERS) $(srcdir)/Makefile.am \
 	$(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
-am__aclocal_m4_deps = $(top_srcdir)/m4/codeset.m4 \
-	$(top_srcdir)/m4/gettext.m4 $(top_srcdir)/m4/glibc21.m4 \
-	$(top_srcdir)/m4/iconv.m4 $(top_srcdir)/m4/intdiv0.m4 \
-	$(top_srcdir)/m4/inttypes-pri.m4 $(top_srcdir)/m4/inttypes.m4 \
-	$(top_srcdir)/m4/inttypes_h.m4 $(top_srcdir)/m4/lcmessage.m4 \
-	$(top_srcdir)/m4/lib-ld.m4 $(top_srcdir)/m4/lib-link.m4 \
-	$(top_srcdir)/m4/lib-prefix.m4 $(top_srcdir)/m4/nls.m4 \
-	$(top_srcdir)/m4/po.m4 $(top_srcdir)/m4/progtest.m4 \
-	$(top_srcdir)/m4/stdint_h.m4 $(top_srcdir)/m4/uintmax_t.m4 \
-	$(top_srcdir)/m4/ulonglong.m4 $(top_srcdir)/configure.ac
+am__aclocal_m4_deps = $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 mkinstalldirs = $(mkdir_p)
@@ -143,6 +134,10 @@ GLIBC21 = @GLIBC21@
 GMSGFMT = @GMSGFMT@
 GTKMM_CFLAGS = @GTKMM_CFLAGS@
 GTKMM_LIBS = @GTKMM_LIBS@
+HAVE_ASPRINTF = @HAVE_ASPRINTF@
+HAVE_POSIX_PRINTF = @HAVE_POSIX_PRINTF@
+HAVE_SNPRINTF = @HAVE_SNPRINTF@
+HAVE_WPRINTF = @HAVE_WPRINTF@
 INSTALL_DATA = @INSTALL_DATA@
 INSTALL_PROGRAM = @INSTALL_PROGRAM@
 INSTALL_SCRIPT = @INSTALL_SCRIPT@
@@ -241,16 +236,17 @@ noinst_HEADERS = debug.h\
 				 xml_serialize.h
 
 noinst_LIBRARIES = libserializexml.a
-libserializexml_a_CXXFLAGS = @EXPAT_CFLAGS@
+libserializexml_a_CXXFLAGS = @EXPAT_CFLAGS@ -I/usr/include/boost-1_32/
+
 # libserializexml_a_LIBADD = @EXPAT_LIBS@
 libserializexml_a_SOURCES = xml_parser.cpp xml_exception.cpp
 example_SOURCES = example.cpp \
 				   example_main.cpp
 
-example_CXXFLAGS = @EXPAT_CFLAGS@ -pedantic -Wall
+example_CXXFLAGS = @EXPAT_CFLAGS@ -pedantic -Wall  -I/usr/include/boost-1_32/
 example_LDADD = @EXPAT_LIBS@ libserializexml.a
 recursive_SOURCES = recursive.cpp 
-recursive_CXXFLAGS = @EXPAT_CFLAGS@ -pedantic -Wall
+recursive_CXXFLAGS = @EXPAT_CFLAGS@ -pedantic -Wall  -I/usr/include/boost-1_32/
 recursive_LDADD = @EXPAT_LIBS@ libserializexml.a
 all: all-am
 
