@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<root_node name="my_tree">
+	<node name="empty" data="1" />
+	<node name="foo-Base"  data="2">
+		<node name="hans"  data="4">
+			<node name="hans1"  data="9"/>
+			<node name="hans2"  data="13"/>
+			<node name="hans3"  data="10"/>
+		</node>
+		<node name="franz"  data="-120"/>
+	</node>
+</root_node>

@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<kun_type leetq="2.2" iq="98">
+	<leet_example enzness="4"> blubs </leet_example>
+	<leet_example enzness="231">Bin Voll der Enz0r Proga </leet_example>
+	<leet_example enzness="99">Perl ist was fuer doofies, Php ist da viel besa</leet_example>
+	<values int="32"/> 
+	<values int="33"/> 
+	<values int="34"/> 
+	<values int="35"/> 
+</kun_type>
