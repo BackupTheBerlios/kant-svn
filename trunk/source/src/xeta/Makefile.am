@@ -30,7 +30,7 @@ libxeta_la_SOURCES = config.cpp \
 					 wget.cpp
 
 libxeta_la_CXXFLAGS = @SQLITE_CFLAGS@ @CURLPP_CFLAGS@ -pthread @BOOST_CPPFLAGS@
-libxeta_la_LIBADD = @SQLITE_LIBS@ @CURLPP_LIBS@ -lboost_thread -lboost_filesystem
+libxeta_la_LIBADD = @SQLITE_LIBS@ @CURLPP_LIBS@ -lboost_thread-@BOOST_TOOLSET@-mt-@BOOST_LIB_VERSION@ -lboost_filesystem-@BOOST_TOOLSET@-mt-@BOOST_LIB_VERSION@
 libxeta_la_LDFLAGS= -version-info $(XETA_LIBRARY_VERSION) -release $(XETA_RELEASE)
 
 bin_PROGRAMS = dep_lang_test uuid_gen transfer_test md5sum

@@ -17,7 +17,11 @@
  * along with this software; if not, write to the Free Software            *
  * Foundation, Inc., 674 Mass Ave, Cambridge, MA 02139, USA.               *
  ***************************************************************************/
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
 
+#ifdef HAVE_CURLPP
 #include "transfer.h"
 #include "curl.h" 
 #define XETA_PRINT_FUNCTION
@@ -59,4 +63,5 @@ void xeta::Curl::perform()
 	}
 
 }
+#endif
 

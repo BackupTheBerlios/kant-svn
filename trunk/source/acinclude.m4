@@ -4,7 +4,7 @@
 ##
 ## Copyright (c) 2003, 2004 by Zaufi
 ##
-## AC_CHOOSE_BOOST([REQUIRED_VERSION], [INCLUDE_PATH_HINT], [LIB_PATH_HINT], [ACTION-IF-FOUND, [ACTION-IF-NOT-FOUND]]])
+## AC_CHOOSE_BOOST([REQUIRED_VERSION], [REQUIRED_LIBS], [INCLUDE_PATH_HINT], [LIB_PATH_HINT], [ACTION-IF-FOUND, [ACTION-IF-NOT-FOUND]]])
 ##
 ## Set the following variables:
 ##  BOOST_VERSION   - same as defined in boost/version.hpp
@@ -15,13 +15,16 @@
 AC_DEFUN([AC_CHOOSE_BOOST],[
     ac_choose_boost_result='no'
 
-    am_inc_boost_dir_default=ifelse([$2], , "/usr/include /usr/local/include", $2)
-    am_lib_boost_dir_default=ifelse([$3], , "/usr/lib /usr/local/lib", $3)
+    am_inc_boost_dir_default=ifelse([$3], , "/usr/include /usr/local/include", $3)
+    am_lib_boost_dir_default=ifelse([$4], , "/usr/lib /usr/local/lib", $4)
 
     BOOST_CPPFLAGS=''
     BOOST_VERSION=''
     BOOST_LIB_VERSION=''
     BOOST_LDFLAGS=''
+    BOOST_SO_EXTENSION=''
+    BOOST_TOOLSET=''
+
 
     AC_ARG_WITH(boost_includedir,
       AS_HELP_STRING([--with-boost-includedir=DIR],
@@ -48,11 +51,40 @@ AC_DEFUN([AC_CHOOSE_BOOST],[
         done
         fi
         ])
+    
+    if test -n "$2" ; then 
+      ac_cv_boost_temp_lib_names=''
+
+      for x in $2 ; do
+        ac_cv_boost_temp_lib_names="$ac_cv_boost_temp_lib_names $x"
+      done
+
+      echo $ac_cv_boost_temp_lib_names
+
+      AC_CACHE_CHECK([where boost libraries $2 are installed], [ac_cv_boost_libs_installed_at],
+        [
+        ac_cv_boost_libs_installed_at='not found'
+        if test -n "$am_lib_boost_dir"; then
+          for library in $ac_cv_boost_temp_lib_names; do 
+            ac_cv_boost_that_lib_name='not found'
+            for dir in $am_lib_boost_dir; do
+              if ls $dir/libboost_$library* 2>&1 > /dev/null; then
+                ac_cv_boost_that_lib_name='found'
+                BOOST_LDFLAGS="-L`dirname $dir`"
+                ac_cv_boost_libs_installed_at=$dir
+                break
+              fi
+            done
+            if test "$ac_cv_boost_that_lib_name" = 'not found'; then
+              ac_cv_boost_libs_installed_at='not found'
+              break
+            fi
+          done
+        fi
+        ])
+    fi
 
 ## TODO: Fair check libraries needed
-    if test $ac_cv_boost_headers_installed_at != 'not found'; then
-    BOOST_LDFLAGS="-L`dirname $ac_cv_boost_headers_installed_at`/lib"
-    fi
 
 ## Check version
     if test $ac_cv_boost_headers_installed_at != 'not found'; then
@@ -86,19 +118,39 @@ am_required_boost_version=ifelse([$1], , $ac_cv_boost_version, $1)
   fi
   fi
 
-  if test "$ac_choose_boost_result" = 'yes'; then
+  if test "$ac_choose_boost_result" = 'yes' -a "$ac_cv_boost_libs_installed_at" != 'not found'; then
         BOOST_LIB_VERSION=`cat $ac_cv_boost_headers_installed_at/boost/version.hpp \
         | grep  '^# *define  *BOOST_LIB_VERSION  *"[0-9]\+_[0-9]\+"$' \
-        | sed 's,^# *define  *BOOST_LIB_VERSION  *"\([0-9]\+_[0-9]\)\+"$,\1,'`
-ifelse([$4], , :, [$4])
-  else
+        | sed 's,^# *define  *BOOST_LIB_VERSION  *"\([0-9]\+_[0-9]\+\)"$,\1,'`
+        BOOST_SO_EXTENSION=`cat $ac_cv_boost_headers_installed_at/boost/version.hpp \
+                           | grep  '^# *define  *BOOST_VERSION  *[0-9]\+$' \ 
+                           | sed 's,^# *define  *BOOST_VERSION  *\([0-9]\)0*\([1-9][0-9]*\)\([0-9][0-9]\)$,\1.\2.\3,' \ 
+                           | sed 's,00,0,'`
+                        
+        if test -n "$2"; then
+          ac_temp_boost_first_libname=''
+          for x in $2; do 
+            ac_temp_boost_first_libname=$x
+          done
+          ac_temp_boost_first_lib=''
+          for x in `ls $ac_cv_boost_libs_installed_at/libboost_$ac_temp_boost_first_libname-*-*-*.so*`; do
+            ac_temp_boost_first_lib=$x
+          done
+          BOOST_TOOLSET=`echo $ac_temp_boost_first_lib \
+                        | sed -e "s:.*$ac_temp_boost_first_libname::" \
+                        | sed -e "s:-\(.*\)-.*-.*:\1:"`
+        fi
 ifelse([$5], , :, [$5])
+  else
+ifelse([$6], , :, [$6])
   fi
 
   AC_SUBST(BOOST_CPPFLAGS)
   AC_SUBST(BOOST_LDFLAGS)
-AC_SUBST(BOOST_VERSION)
-AC_SUBST(BOOST_LIB_VERSION)
+  AC_SUBST(BOOST_VERSION)
+  AC_SUBST(BOOST_LIB_VERSION)
+  AC_SUBST(BOOST_SO_EXTENSION)
+  AC_SUBST(BOOST_TOOLSET)
   ])
 
 AC_DEFUN([AC_DEFINE_DIR], [

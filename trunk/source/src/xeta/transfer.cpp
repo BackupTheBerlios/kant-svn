@@ -18,9 +18,15 @@
  * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.               *
  ***************************************************************************/
 #ifndef TRANSFER_TEST
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include "transfer.h"
 #include "wget.h"
+#ifdef HAVE_CURLPP
 #include "curl.h"
+#endif
 #include "config.h"
 #include <iostream>
 #include <boost/filesystem/path.hpp>
@@ -228,9 +234,11 @@ xeta::FileTransferPtr xeta::FileTransferManager::download( std::string const& ur
 	{
 		DEBUG_COUT("protocol found : " << it->first <<std::endl);
 		FileTransferPtr new_transfer;
+#ifdef HAVE_CURLPP
 		if( it->second == "curl")
 			new_transfer = FileTransferPtr( new Curl( url, checksum ) );
-		else // if( it->second == "wget")
+#endif 
+		if( it->second == "wget")
 			new_transfer = FileTransferPtr( new WGet( url, checksum ) );
 
 		worker.add_download( new_transfer );

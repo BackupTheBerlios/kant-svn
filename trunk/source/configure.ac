@@ -70,6 +70,7 @@ then
 	CURLPP_LIBS=`curlpp-config --libs`
 	echo "CURLPP_LIBS is $CURLPP_LIBS"
 	echo "CURLPP_CFLAGS is $CURLPP_CFLAGS"
+  AC_DEFINE(HAVE_CURLPP,1,["Curlpp is installed"])
 else
 	AC_MSG_WARN("Could not find curlpp-config, curl support disabled")
 fi
@@ -101,7 +102,7 @@ AC_CHECK_HEADERS(linux/types.h cstdlib unistd.h sys/sockio.h sys/sockio.h net/if
 #				 [AC_MSG_ERROR("boost headers are missing.")])
 
 
-AC_CHOOSE_BOOST([103100], , , , AC_MSG_ERROR([Boost required!]))
+AC_CHOOSE_BOOST([103100],[filesystem thread], , , , AC_MSG_ERROR([Boost required!]))
 
 
 # Checks for typedefs, structures, and compiler characteristics.
