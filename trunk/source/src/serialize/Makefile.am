@@ -7,7 +7,7 @@ noinst_HEADERS = debug.h\
 				 
 noinst_LIBRARIES = libserializexml.a
 
-libserializexml_a_CXXFLAGS = @EXPAT_CFLAGS@ -I/usr/include/boost-1_32/
+libserializexml_a_CXXFLAGS = @EXPAT_CFLAGS@  @BOOST_CPPFLAGS@
 
 # libserializexml_a_LIBADD = @EXPAT_LIBS@
 libserializexml_a_SOURCES =  xml_parser.cpp xml_exception.cpp

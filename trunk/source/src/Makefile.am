@@ -11,7 +11,7 @@ ___xeta_SOURCES = gtest.cpp\
 			   gxt/widget.cpp
 
 
-___xeta_CXXFLAGS = @GTKMM_CFLAGS@ -DLOCALEDIR=\"@datadir@/locale\" -I/usr/include/boost-1_32/
+___xeta_CXXFLAGS = @GTKMM_CFLAGS@ -DLOCALEDIR=\"@datadir@/locale\" @BOOST_CPPFLAGS@
 ___xeta_LDADD = @GTKMM_LIBS@
 ___xeta_LDFLAGS = -lxeta -L$(top_builddir)/src/xeta/
 
