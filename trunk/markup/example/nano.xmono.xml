@@ -1,0 +1,455 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE proj SYSTEM "http://jupiter.zynot.org/~zllow/XBuilds/dtd/monolith.dtd">
+<xmonolith>
+  <proj uuid="70cd4c7b-b920-4668-941e-fd317880d4e6">
+    <www>http://www.nano-editor.org/</www>
+    <maintainers>
+      <group name="core"/>
+    </maintainers>
+    <name>nano</name>
+    <name>virtual/text-editor</name>
+    <sdesc>
+      <lctext lang="en">clone of Pico with more functions in a smaller size</lctext>
+    </sdesc>
+    <ldesc>
+      <lctext lang="en">Insert long description here</lctext>
+    </ldesc>
+    <keywords>
+    app,text,editor,core
+  </keywords>
+  </proj>
+<!--
+ Copyright 1999-2003 Gentoo Technologies, Inc.
+ Distributed under the terms of the GNU General Public License v2
+-->
+  <xbuild uuid="8d4dd227-51b3-43d1-86f5-dd157ab4ce60" ver="1.0.9.2" proj="70cd4c7b-b920-4668-941e-fd317880d4e6">
+    <metadata>
+      <src>http://www.nano-editor.org/dist/v1.0/nano-1.0.9.tar.gz</src>
+      <license name="GPL-2"/>
+      <usability>
+        <arch name="x86" level="1.0"/>
+        <arch name="ppc" level="1.0"/>
+        <arch name="sparc" level="1.0"/>
+        <arch name="alpha" level="1.0"/>
+        <arch name="mips" level="1.0"/>
+        <arch name="hppa" level="1.0"/>
+        <arch name="amd64" level="1.0"/>
+      </usability>
+      <dep>
+      build,run {
+        [core,libs]:ncurses &gt;=5.2
+        nls ? ( [core,libs]:gettext )
+      }
+    </dep>
+      <iuse>nls build slang</iuse>
+      <srcdir>${WORKDIR}/${P}</srcdir>
+    </metadata>
+    <code lang="bash">
+  
+src_compile() {
+	local myconf=&quot;--bindir=/bin --enable-extra&quot;
+	use nls   || myconf=&quot;${myconf} --disable-nls&quot;
+	use build &amp;&amp; myconf=&quot;${myconf} --disable-wrapping-as-root&quot;
+
+	econf ${myconf}
+	emake || die
+}
+
+src_install() {
+	make DESTDIR=${D} install || die
+
+	use build \
+		&amp;&amp; rm -rf ${D}/usr/share \
+		|| dodoc COPYING ChangeLog README
+
+	dodir /usr/bin
+	dosym /bin/nano /usr/bin/nano
+}
+  </code>
+  </xbuild>
+<!--
+ Copyright 1999-2003 Gentoo Technologies, Inc.
+ Distributed under the terms of the GNU General Public License v2
+-->
+  <xbuild uuid="5aed646b-730f-4d12-8ad4-d2f0b0bdc150" ver="1.2.0" proj="70cd4c7b-b920-4668-941e-fd317880d4e6">
+    <metadata>
+      <src>http://www.nano-editor.org/dist/v1.2/nano-1.2.0.tar.gz</src>
+      <license name="GPL-2"/>
+      <usability>
+        <arch name="x86" level="1.0"/>
+        <arch name="ppc" level="1.0"/>
+        <arch name="sparc" level="1.0"/>
+        <arch name="alpha" level="1.0"/>
+        <arch name="mips" level="0.5"/>
+        <arch name="hppa" level="1.0"/>
+        <arch name="amd64" level="1.0"/>
+      </usability>
+      <dep>
+      build,run {
+        [core,libs]:ncurses &gt;=5.2
+        nls ? ( [core,libs]:gettext )
+      }
+    </dep>
+      <iuse>nls build slang spell</iuse>
+      <srcdir>${WORKDIR}/${P}</srcdir>
+    </metadata>
+    <code lang="bash">
+
+src_compile() {
+	use build &amp;&amp; myconf=&quot;${myconf} --disable-wrapping-as-root&quot;
+
+	econf \
+		--bindir=/bin \
+		--enable-color \
+		--enable-multibuffer \
+		--enable-nanorc \
+		`use_enable spell` \
+		`use_enable nls` \
+		${myconf} \
+		|| die &quot;configure failed&quot;
+	emake || die
+}
+
+src_install() {
+	make DESTDIR=${D} install || die
+
+	use build \
+		&amp;&amp; rm -rf ${D}/usr/share \
+		|| dodoc ChangeLog README nanorc.sample AUTHORS BUGS NEWS TODO \
+		&amp;&amp; dohtml *.html
+
+	dodir /usr/bin
+	dosym /bin/nano /usr/bin/nano
+}
+  </code>
+  </xbuild>
+<!--
+ Copyright 1999-2003 Gentoo Technologies, Inc.
+ Distributed under the terms of the GNU General Public License v2
+-->
+  <xbuild uuid="587cdc71-dff2-4f1c-aab8-03de18d2912c" ver="1.2.1" proj="70cd4c7b-b920-4668-941e-fd317880d4e6">
+    <metadata>
+      <src>http://www.nano-editor.org/dist/v1.2/nano-1.2.1.tar.gz</src>
+      <license name="GPL-2"/>
+      <usability>
+        <arch name="x86" level="1.0"/>
+        <arch name="ppc" level="1.0"/>
+        <arch name="sparc" level="1.0"/>
+        <arch name="alpha" level="1.0"/>
+        <arch name="mips" level="1.0"/>
+        <arch name="hppa" level="1.0"/>
+        <arch name="arm" level="0.5"/>
+        <arch name="amd64" level="1.0"/>
+      </usability>
+      <dep>
+      build,run {
+        [core,libs]:ncurses &gt;=5.2
+        nls ? ( [core,libs]:gettext )
+      }
+    </dep>
+      <iuse>nls build spell justify</iuse>
+      <srcdir>${WORKDIR}/${P}</srcdir>
+    </metadata>
+    <code lang="bash">
+
+src_unpack() {
+	unpack ${A}
+	cd ${S}
+	epatch ${FILESDIR}/nanohupterm.patch
+}
+
+src_compile() {
+	use build &amp;&amp; myconf=&quot;${myconf} --disable-wrapping-as-root&quot;
+
+	econf \
+		--bindir=/bin \
+		--enable-color \
+		--enable-multibuffer \
+		--enable-nanorc \
+		`use_enable justify` \
+		`use_enable spell` \
+		`use_enable nls` \
+		${myconf} \
+		|| die &quot;configure failed&quot;
+	emake || die
+}
+
+src_install() {
+	make DESTDIR=${D} install || die
+
+	use build \
+		&amp;&amp; rm -rf ${D}/usr/share \
+		|| dodoc ChangeLog README nanorc.sample AUTHORS BUGS NEWS TODO \
+		&amp;&amp; dohtml *.html
+
+	dodir /usr/bin
+	dosym /bin/nano /usr/bin/nano
+}
+  </code>
+  </xbuild>
+<!--
+ Copyright 1999-2003 Gentoo Technologies, Inc.
+ Distributed under the terms of the GNU General Public License v2
+-->
+  <xbuild uuid="eb19a986-7bd0-488c-b21f-a67e1b454cfc" ver="1.2.2" proj="70cd4c7b-b920-4668-941e-fd317880d4e6">
+    <metadata>
+      <src>http://www.nano-editor.org/dist/v1.2/nano-1.2.2.tar.gz</src>
+      <license name="GPL-2"/>
+      <usability>
+        <arch name="x86" level="1.0"/>
+        <arch name="ppc" level="1.0"/>
+        <arch name="sparc" level="0.5"/>
+        <arch name="alpha" level="0.5"/>
+        <arch name="mips" level="1.0"/>
+        <arch name="hppa" level="0.5"/>
+        <arch name="arm" level="1.0"/>
+        <arch name="amd64" level="0.5"/>
+      </usability>
+      <dep>
+      build,run {
+        [core,libs]:ncurses &gt;=5.2
+        nls ? ( [core,libs]:gettext )
+        slang ? ( [display,libs]:slang )
+      }
+    </dep>
+      <iuse>nls build spell justify debug slang</iuse>
+      <srcdir>${WORKDIR}/${P}</srcdir>
+    </metadata>
+    <code lang="bash">
+src_unpack() {
+	unpack ${A}
+	cd ${S}
+	epatch ${FILESDIR}/nanohupterm.patch
+	epatch ${FILESDIR}/${PV}-wsconvert.patch
+}
+
+src_compile() {
+	local myconf=&quot;&quot;
+	use build &amp;&amp; myconf=&quot;${myconf} --disable-wrapping-as-root&quot;
+	[ `use ncurses` ] || myconf=&quot;${myconf} `use_with slang`&quot;
+
+	econf \
+		--bindir=/bin \
+		--enable-color \
+		--enable-multibuffer \
+		--enable-nanorc \
+		`use_enable justify` \
+		`use_enable spell` \
+		`use_enable debug` \
+		`use_enable nls` \
+		${myconf} \
+		|| die &quot;configure failed&quot;
+	emake || die
+}
+
+src_install() {
+	make DESTDIR=${D} install || die
+
+	if [ `use build` ] ; then
+		rm -rf ${D}/usr/share
+	else
+		cat ${FILESDIR}/nanorc-* &gt;&gt; nanorc.sample
+		dodoc ChangeLog README nanorc.sample AUTHORS BUGS NEWS TODO
+		dohtml *.html
+		insinto /etc
+		newins nanorc.sample nanorc
+	fi
+
+	dodir /usr/bin
+	dosym ../../bin/nano /usr/bin/nano
+}
+  </code>
+  </xbuild>
+  <file64 name="1.2.2-wsconvert.patch" assoc="proj" proj="70cd4c7b-b920-4668-941e-fd317880d4e6">
+ZGlmZiAtdXIgd29yay5vcmlnL25hbm8tMS4yLjIvZ2xvYmFsLmMgd29yay9uYW5vLTEuMi4yL2ds
+b2JhbC5jCi0tLSB3b3JrLm9yaWcvbmFuby0xLjIuMi9nbG9iYWwuYwkyMDAzLTA5LTAxIDE4OjE1
+OjU5LjAwMDAwMDAwMCAtMDQwMAorKysgd29yay9uYW5vLTEuMi4yL2dsb2JhbC5jCTIwMDMtMDkt
+MDIgMDg6NDY6MDMuMDAwMDAwMDAwIC0wNDAwCkBAIC04MCw2ICs4MCw4IEBACiAKIGludCB0YWJz
+aXplID0gLTE7CQkvKiBPdXIgaW50ZXJuYWwgdGFic2l6ZSB2YXJpYWJsZS4gIFRoZQogCQkJCSAg
+IGRlZmF1bHQgdmFsdWUgOCBpcyBzZXQgaW4gbWFpbigpLiAqLworaW50IHRhYmNvbnZlcnQgPSAn
+ICc7CitpbnQgc3BhY2Vjb252ZXJ0ID0gJyAnOwogCiBjaGFyICpoYmxhbmsgPSBOVUxMOwkJLyog
+QSBob3Jpem9udGFsIGJsYW5rIGxpbmUgKi8KICNpZm5kZWYgRElTQUJMRV9IRUxQCkBAIC0yMjQs
+NyArMjI2LDcgQEAKICAgICBjaGFyICp0b2dnbGVfY29uc3RfbXNnLCAqdG9nZ2xlX2F1dG9pbmRl
+bnRfbXNnLCAqdG9nZ2xlX3N1c3BlbmRfbXNnLAogCSp0b2dnbGVfbm9oZWxwX21zZywgKnRvZ2ds
+ZV9jdXR0b2VuZF9tc2csCiAJKnRvZ2dsZV9ub2NvbnZlcnRfbXNnLCAqdG9nZ2xlX2Rvc19tc2cs
+ICp0b2dnbGVfbWFjX21zZywKLQkqdG9nZ2xlX2JhY2t1cF9tc2csICp0b2dnbGVfc21vb3RoX21z
+ZzsKKwkqdG9nZ2xlX2JhY2t1cF9tc2csICp0b2dnbGVfc21vb3RoX21zZzsvLywgKnRvZ2dsZV93
+c2NvbnZlcnRfbXNnOwogI2lmICFkZWZpbmVkKERJU0FCTEVfTU9VU0UpICYmIGRlZmluZWQoTkNV
+UlNFU19NT1VTRV9WRVJTSU9OKQogICAgIGNoYXIgKnRvZ2dsZV9tb3VzZV9tc2c7CiAjZW5kaWYK
+QEAgLTI1Niw2ICsyNTgsNyBAQAogICAgIHRvZ2dsZV9tYWNfbXNnID0gXygiV3JpdGluZyBmaWxl
+IGluIE1hYyBmb3JtYXQiKTsKICAgICB0b2dnbGVfYmFja3VwX21zZyA9IF8oIkJhY2tpbmcgdXAg
+ZmlsZSIpOwogICAgIHRvZ2dsZV9zbW9vdGhfbXNnID0gXygiU21vb3RoIHNjcm9sbGluZyIpOwor
+ICAgIC8vdG9nZ2xlX3dzY29udmVydF9tc2cgPSBfKCJXaGl0ZXNwYWNlIGNvbnZlcnRpbmciKTsK
+ICNpZmRlZiBFTkFCTEVfQ09MT1IKICAgICB0b2dnbGVfc3ludGF4X21zZyA9IF8oIkNvbG9yIHN5
+bnRheCBoaWdobGlnaHRpbmciKTsKICNlbmRpZgpAQCAtMjcwLDYgKzI3Myw3IEBACiAgICAgdG9n
+Z2xlX2luaXRfb25lKFRPR0dMRV9BVVRPSU5ERU5UX0tFWSwgdG9nZ2xlX2F1dG9pbmRlbnRfbXNn
+LCBBVVRPSU5ERU5UKTsKICAgICB0b2dnbGVfaW5pdF9vbmUoVE9HR0xFX1NVU1BFTkRfS0VZLCB0
+b2dnbGVfc3VzcGVuZF9tc2csIFNVU1BFTkQpOwogICAgIHRvZ2dsZV9pbml0X29uZShUT0dHTEVf
+Tk9IRUxQX0tFWSwgdG9nZ2xlX25vaGVscF9tc2csIE5PX0hFTFApOworICAgIC8vdG9nZ2xlX2lu
+aXRfb25lKFRPR0dMRV9XU0NPTlZFUlRfS0VZLCB0b2dnbGVfd3Njb252ZXJ0X21zZywgV1NfQ09O
+VkVSVCk7CiAjaWZuZGVmIERJU0FCTEVfV1JBUFBJTkcKICAgICB0b2dnbGVfaW5pdF9vbmUoVE9H
+R0xFX1dSQVBfS0VZLCB0b2dnbGVfd3JhcF9tc2csIE5PX1dSQVApOwogI2VuZGlmCmRpZmYgLXVy
+IHdvcmsub3JpZy9uYW5vLTEuMi4yL25hbm8uaCB3b3JrL25hbm8tMS4yLjIvbmFuby5oCi0tLSB3
+b3JrLm9yaWcvbmFuby0xLjIuMi9uYW5vLmgJMjAwMy0wOS0wMSAxODoxNTo1OS4wMDAwMDAwMDAg
+LTA0MDAKKysrIHdvcmsvbmFuby0xLjIuMi9uYW5vLmgJMjAwMy0wOS0wMiAwOTowNToxNy4wMDAw
+MDAwMDAgLTA0MDAKQEAgLTI1Myw2ICsyNTMsNyBAQAogI2RlZmluZSBISVNUT1JZX0NIQU5HRUQJ
+CSgxPDwyOSkKICNkZWZpbmUgSElTVE9SWUxPRwkJKDE8PDMwKQogI2RlZmluZSBKVVNUSUZZX01P
+REUJCSgxPDwzMSkKKy8vI2RlZmluZSBXU19DT05WRVJUCQkoMTw8MzEpIC8vIDMyCiAKIC8qIENv
+bnRyb2wga2V5IHNlcXVlbmNlcywgY2hhbmdpbmcgdGhlc2Ugd291bGQgYmUgdmVyeSB2ZXJ5IGJh
+ZCAqLwogCkBAIC00MDQsNiArNDA1LDcgQEAKICNkZWZpbmUgVE9HR0xFX01BQ19LRVkJCU5BTk9f
+QUxUX08KICNkZWZpbmUgVE9HR0xFX1NNT09USF9LRVkJTkFOT19BTFRfUwogI2RlZmluZSBUT0dH
+TEVfTk9DT05WRVJUX0tFWQlOQU5PX0FMVF9OCisjZGVmaW5lIFRPR0dMRV9XU0NPTlZFUlRfS0VZ
+CU5BTk9fQUxUX1YKICNkZWZpbmUgVE9HR0xFX0JBQ0tVUF9LRVkJTkFOT19BTFRfQgogI2RlZmlu
+ZSBUT0dHTEVfU1lOVEFYX0tFWQlOQU5PX0FMVF9ZCiAjZW5kaWYgLyogIU5BTk9fU01BTEwgKi8K
+ZGlmZiAtdXIgd29yay5vcmlnL25hbm8tMS4yLjIvbmFub3JjLnNhbXBsZSB3b3JrL25hbm8tMS4y
+LjIvbmFub3JjLnNhbXBsZQotLS0gd29yay5vcmlnL25hbm8tMS4yLjIvbmFub3JjLnNhbXBsZQky
+MDAzLTA5LTAxIDE4OjE1OjU5LjAwMDAwMDAwMCAtMDQwMAorKysgd29yay9uYW5vLTEuMi4yL25h
+bm9yYy5zYW1wbGUJMjAwMy0wOS0wMSAxODozMjozMS4wMDAwMDAwMDAgLTA0MDAKQEAgLTg2LDYg
+Kzg2LDE2IEBACiAjIyBVc2UgdGhpcyB0YWIgc2l6ZSBpbnN0ZWFkIG9mIHRoZSBkZWZhdWx0OyBp
+dCBtdXN0IGJlIGdyZWF0ZXIgdGhhbiAwCiAjIHNldCB0YWJzaXplIDgKIAorIyMgVXNlIHRoaXMg
+dGFiIGNoYXIgaW5zdGVhZCBvZiB0aGUgZGVmYXVsdCBzcGFjZTsgaXQgY2FuIGVpdGhlciBiZSB0
+aGUKKyMjIGFzY2lpIHZhbHVlIG9mIHRoZSBjaGFyYWN0ZXIgeW91IHdpc2ggdG8gc2VlIChyZWZl
+ciB0byBhc2NpaSg3KSkgb3IKKyMjIGl0IGNhbiBiZSBhIHNpbmdsZSBjaGFyYWN0ZXIuICAxODcg
+c2VlbXMgdG8gYmUgYSAnZ29vZCcgdmFsdWUuCisjIHNldCB0YWJjb252ZXJ0IDMyCisjIyBTYW1l
+IGFzIHRhYmNvbnZlcnRpbmcgYWJvdmUsIGJ1dCBhcHBsaWVkIHRvIHNwYWNlcy4KKyMjIGl0IGNh
+biBiZSBhIHNpbmdsZSBjaGFyYWN0ZXIuICAxODMgc2VlbXMgdG8gYmUgYSAnZ29vZCcgdmFsdWUu
+CisjIHNldCBzcGFjZWNvbnZlcnQgMzIKKyMjIEZpbmFsbHksIHlvdSBjYW4gdG9nZ2xlIHdoaXRl
+c3BhY2UgY29udmVydGluZyB3aXRoIHRoaXMKKyMgc2V0IHdzY29udmVydAorCiAjIyBTYXZlIGF1
+dG9tYXRpY2FsbHkgb24gZXhpdCwgZG9uJ3QgcHJvbXB0CiAjIHNldCB0ZW1wZmlsZQogCmRpZmYg
+LXVyIHdvcmsub3JpZy9uYW5vLTEuMi4yL3Byb3RvLmggd29yay9uYW5vLTEuMi4yL3Byb3RvLmgK
+LS0tIHdvcmsub3JpZy9uYW5vLTEuMi4yL3Byb3RvLmgJMjAwMy0wOS0wMSAxODoxNTo1OS4wMDAw
+MDAwMDAgLTA0MDAKKysrIHdvcmsvbmFuby0xLjIuMi9wcm90by5oCTIwMDMtMDktMDIgMDg6NDI6
+NTMuMDAwMDAwMDAwIC0wNDAwCkBAIC0zOCw3ICszOCw3IEBACiAjZW5kaWYKIGV4dGVybiBsb25n
+IHRvdHNpemU7CiBleHRlcm4gaW50IHRlbXBfb3B0OwotZXh0ZXJuIGludCB3cmFwX2F0LCBmbGFn
+cywgdGFic2l6ZTsKK2V4dGVybiBpbnQgd3JhcF9hdCwgZmxhZ3MsIHRhYnNpemUsIHRhYmNvbnZl
+cnQsIHNwYWNlY29udmVydDsKIGV4dGVybiBpbnQgc2VhcmNoX2xhc3RfbGluZTsKIGV4dGVybiBp
+bnQgc2VhcmNoX29mZnNjcmVlbjsKIGV4dGVybiBpbnQgY3VycnNsZW47CmRpZmYgLXVyIHdvcmsu
+b3JpZy9uYW5vLTEuMi4yL3JjZmlsZS5jIHdvcmsvbmFuby0xLjIuMi9yY2ZpbGUuYwotLS0gd29y
+ay5vcmlnL25hbm8tMS4yLjIvcmNmaWxlLmMJMjAwMy0wOS0wMSAxODoxNTo1OS4wMDAwMDAwMDAg
+LTA0MDAKKysrIHdvcmsvbmFuby0xLjIuMi9yY2ZpbGUuYwkyMDAzLTA5LTAyIDA4OjQ1OjQ5LjAw
+MDAwMDAwMCAtMDQwMApAQCAtNTgsNiArNTgsNyBAQAogI2VuZGlmCiAjaWZuZGVmIE5BTk9fU01B
+TEwKICAgICB7Im5vY29udmVydCIsIE5PX0NPTlZFUlR9LAorLyogICAgeyJ3c2NvbnZlcnQiLCBX
+U19DT05WRVJUfSwqLwogI2VuZGlmCiAgICAgeyJub2ZvbGxvdyIsIE5PRk9MTE9XX1NZTUxJTktT
+fSwKICAgICB7Im5vaGVscCIsIE5PX0hFTFB9LApAQCAtODIsNiArODMsOCBAQAogI2VuZGlmCiAg
+ICAgeyJzdXNwZW5kIiwgU1VTUEVORH0sCiAgICAgeyJ0YWJzaXplIiwgMH0sCisgICAgeyJ0YWJj
+b252ZXJ0IiwgJyAnfSwKKyAgICB7InNwYWNlY29udmVydCIsICcgJ30sCiAgICAgeyJ0ZW1wZmls
+ZSIsIFRFTVBfT1BUfSwKICAgICB7InZpZXciLCBWSUVXX01PREV9LAogICAgIHsiaGlzdG9yeWxv
+ZyIsIEhJU1RPUllMT0d9LApAQCAtNTIzLDYgKzUyNiw4IEBACiAjZW5kaWYKIAkJICAgIGlmIChz
+ZXQgPT0gMSkgewogCQkJaWYgKCFzdHJjYXNlY21wKHJjb3B0c1tpXS5uYW1lLCAidGFic2l6ZSIp
+CisJCQkJfHwgIXN0cmNhc2VjbXAocmNvcHRzW2ldLm5hbWUsICJ0YWJjb252ZXJ0IikKKwkJCQl8
+fCAhc3RyY2FzZWNtcChyY29wdHNbaV0ubmFtZSwgInNwYWNlY29udmVydCIpCiAjaWZuZGVmIERJ
+U0FCTEVfT1BFUkFUSU5HRElSCiAJCQkJfHwgIXN0cmNhc2VjbXAocmNvcHRzW2ldLm5hbWUsICJv
+cGVyYXRpbmdkaXIiKQogI2VuZGlmCkBAIC01ODYsMTEgKzU5MSwyOSBAQAogCQkJCSAqIGFjY2Vw
+dCAwIHdoaWxlIGNoZWNraW5nIG90aGVyCiAJCQkJICogZXJyb3JzLiAqLwogCQkJCWogPSAoaW50
+KXN0cnRvbChvcHRpb24sICZmaXJzdF9lcnJvciwgMTApOwotCQkJCWlmIChlcnJubyA9PSBFUkFO
+R0UgfHwgKm9wdGlvbiA9PSAnXDAnIHx8ICpmaXJzdF9lcnJvciAhPSAnXDAnKQotCQkJCSAgICBy
+Y2ZpbGVfZXJyb3IoXygicmVxdWVzdGVkIHRhYiBzaXplICVkIGludmFsaWQiKSwKLQkJCQkJCSBq
+KTsKLQkJCQllbHNlCi0JCQkJICAgIHRhYnNpemUgPSBqOworCQkJCWlmICghc3RyY2FzZWNtcChy
+Y29wdHNbaV0ubmFtZSwgInRhYmNvbnZlcnQiKSkgeworCQkJCQlpZiAoZXJybm8gPT0gRVJBTkdF
+IHx8ICpmaXJzdF9lcnJvciAhPSAnXDAnKSB7CisJCQkJCQlpZiAoKm9wdGlvbiA9PSAnXDAnKQor
+CQkJCQkJCXJjZmlsZV9lcnJvcihfKCJyZXF1ZXN0ZWQgdGFiIGNvbnZlcnQgaXMgaW52YWxpZCIp
+KTsKKwkJCQkJCWVsc2UKKwkJCQkJCQl0YWJjb252ZXJ0ID0gb3B0aW9uWzBdOworCQkJCQl9IGVs
+c2UKKwkJCQkJCXRhYmNvbnZlcnQgPSBqOworCQkJCX0gZWxzZSBpZiAoIXN0cmNhc2VjbXAocmNv
+cHRzW2ldLm5hbWUsICJzcGFjZWNvbnZlcnQiKSkgeworCQkJCQlpZiAoZXJybm8gPT0gRVJBTkdF
+IHx8ICpmaXJzdF9lcnJvciAhPSAnXDAnKSB7CisJCQkJCQlpZiAoKm9wdGlvbiA9PSAnXDAnKQor
+CQkJCQkJCXJjZmlsZV9lcnJvcihfKCJyZXF1ZXN0ZWQgc3BhY2UgY29udmVydCBpcyBpbnZhbGlk
+IikpOworCQkJCQkJZWxzZQorCQkJCQkJCXNwYWNlY29udmVydCA9IG9wdGlvblswXTsKKwkJCQkJ
+fSBlbHNlCisJCQkJCQlzcGFjZWNvbnZlcnQgPSBqOworCQkJCX0gZWxzZSB7CisJCQkJCWlmIChl
+cnJubyA9PSBFUkFOR0UgfHwgKm9wdGlvbiA9PSAnXDAnIHx8ICpmaXJzdF9lcnJvciAhPSAnXDAn
+KQorCQkJCQkgICAgcmNmaWxlX2Vycm9yKF8oInJlcXVlc3RlZCB0YWIgc2l6ZSAlZCBpbnZhbGlk
+IiksCisJCQkJCQkJIGopOworCQkJCQllbHNlCisJCQkJCQl0YWJzaXplID0gajsKKwkJCQl9CiAJ
+CQkgICAgfQogCQkJfSBlbHNlCiAJCQkgICAgU0VUKHJjb3B0c1tpXS5mbGFnKTsKZGlmZiAtdXIg
+d29yay5vcmlnL25hbm8tMS4yLjIvd2luaW8uYyB3b3JrL25hbm8tMS4yLjIvd2luaW8uYwotLS0g
+d29yay5vcmlnL25hbm8tMS4yLjIvd2luaW8uYwkyMDAzLTA5LTAxIDE4OjE1OjU5LjAwMDAwMDAw
+MCAtMDQwMAorKysgd29yay9uYW5vLTEuMi4yL3dpbmlvLmMJMjAwMy0wOS0wMiAwODo0Mzo1Ni4w
+MDAwMDAwMDAgLTA0MDAKQEAgLTEwNjcsMTEgKzEwNjcsMTEgQEAKIAogICAgIHBvcyA9IDA7CiAg
+ICAgZm9yICg7ICpvcmlnaW5hbCAhPSAnXDAnOyBvcmlnaW5hbCsrKSB7Ci0JaWYgKCpvcmlnaW5h
+bCA9PSAnXHQnKQotCSAgICBkbyB7CisJaWYgKCpvcmlnaW5hbCA9PSAnXHQnKSB7CisJICAgIGNv
+bnZlcnRlZFtwb3MrK10gPSAvKihJU1NFVChXU19DT05WRVJUKSA/Ki8gdGFiY29udmVydCAvKjog
+JyAnKSovOworCSAgICB3aGlsZSAocG9zICUgdGFic2l6ZSkKIAkJY29udmVydGVkW3BvcysrXSA9
+ICcgJzsKLQkgICAgfSB3aGlsZSAocG9zICUgdGFic2l6ZSk7Ci0JZWxzZSBpZiAoaXNfY250cmxf
+Y2hhcigqb3JpZ2luYWwpKSB7CisJfSBlbHNlIGlmIChpc19jbnRybF9jaGFyKCpvcmlnaW5hbCkp
+IHsKIAkgICAgY29udmVydGVkW3BvcysrXSA9ICdeJzsKIAkgICAgaWYgKCpvcmlnaW5hbCA9PSAx
+MjcpCiAJCWNvbnZlcnRlZFtwb3MrK10gPSAnPyc7CkBAIC0xMDgzLDcgKzEwODMsNyBAQAogCSAg
+ICBlbHNlCiAJCWNvbnZlcnRlZFtwb3MrK10gPSAqb3JpZ2luYWwgKyA2NDsKIAl9IGVsc2UKLQkg
+ICAgY29udmVydGVkW3BvcysrXSA9ICpvcmlnaW5hbDsKKwkgICAgY29udmVydGVkW3BvcysrXSA9
+ICgqb3JpZ2luYWw9PScgJy8qJiZJU1NFVChXU19DT05WRVJUKSovKSA/IHNwYWNlY29udmVydCA6
+ICpvcmlnaW5hbDsKICAgICB9CiAgICAgY29udmVydGVkW3Bvc10gPSAnXDAnOwogCi0tLSB3b3Jr
+Lm9yaWcvbmFuby0xLjIuMi9uYW5vLmMub3JpZwkyMDAzLTA5LTE0IDIwOjMzOjQ4Ljk4MTYyNzE1
+MiAtMDQwMAorKysgd29yay9uYW5vLTEuMi4yL25hbm8uYwkyMDAzLTA5LTE0IDIwOjM0OjMzLjk5
+MDc4NDcyMCAtMDQwMApAQCAtMjk1Nyw2ICsyOTU3LDkgQEAKIAllZGl0X3JlZnJlc2goKTsKIAli
+cmVhazsKICNlbmRpZgorLyogICAgY2FzZSBUT0dHTEVfV1NDT05WRVJUX0tFWToKKwllZGl0X3Jl
+ZnJlc2goKTsKKwlicmVhazsqLwogICAgIH0KIAogICAgIC8qIFdlIGFyZSBhc3N1bWluZyBoZXJl
+IHRoYXQgc2hvcnRjdXRfaW5pdCgpIGFib3ZlIGRpZG4ndCBmcmVlIGFuZAo=
+</file64>
+  <file64 name="nanohupterm.patch" assoc="proj" proj="70cd4c7b-b920-4668-941e-fd317880d4e6">
+ZGlmZiAtdXIgbmFuby9zcmMvbmFuby5jIG5hbm8tZml4ZWQvc3JjL25hbm8uYwotLS0gbmFuby9z
+cmMvbmFuby5jCTIwMDMtMDktMjggMTc6MjY6NDkuMDAwMDAwMDAwIC0wNDAwCisrKyBuYW5vLWZp
+eGVkL3NyYy9uYW5vLmMJMjAwMy0wOS0yOSAwMToxODoxNi4wMDAwMDAwMDAgLTA0MDAKQEAgLTI4
+NTIsNiArMjg1MiwxMiBAQAogICAgIC8qIFJlc3RvcmUgdGhlIHRlcm1pbmFsIHNldHRpbmdzIGZv
+ciB0aGUgZGlzYWJsZWQga2V5cyAqLwogICAgIHRjc2V0YXR0cigwLCBUQ1NBTk9XLCAmb2xkdGVy
+bSk7CiAKKyAgICAvKiBUcmFwIFNJR0hVUCBhbmQgU0lHVEVSTSBzbyB3ZSBjYW4gcHJvcGVybHkg
+ZGVhbCB3aXRoIHRoZW0gd2hpbGUKKyAgICAgICBzdXNwZW5kZWQgKi8KKyAgICBhY3Quc2FfaGFu
+ZGxlciA9IGhhbmRsZV9odXB0ZXJtOworICAgIHNpZ2FjdGlvbihTSUdIVVAsICZhY3QsIE5VTEwp
+OworICAgIHNpZ2FjdGlvbihTSUdURVJNLCAmYWN0LCBOVUxMKTsKKwogICAgIC8qIFdlIHVzZWQg
+dG8gcmUtZW5hYmxlIHRoZSBkZWZhdWx0IFNJR19ERkwgYW5kIHJhaXNlIFNJR1RTVFAsIGJ1dCAK
+ICAgICAgICB0aGVuIHdlIGNvdWxkIGJlIChhbmQgd2VyZSkgaW50ZXJydXB0ZWQgaW4gdGhlIG1p
+ZGRsZSBvZiB0aGUgY2FsbC4KICAgICAgICBTbyB3ZSBkbyBpdCB0aGUgbXV0dCB3YXkgaW5zdGVh
+ZCAqLwo=
+</file64>
+  <file64 name="nanorc-gentoo" assoc="proj" proj="70cd4c7b-b920-4668-941e-fd317880d4e6">
+CiMjIEhlcmUgaXMgYW4gZXhhbXBsZSBmb3IgZWJ1aWxkcy9lY2xhc3NlcwojIwojIHN5bnRheCAi
+ZWJ1aWxkIiAiXC5lKGJ1aWxkfGNsYXNzKSQiCiMjIEFsbCB0aGUgc3RhbmRhcmQgcG9ydGFnZSBm
+dW5jdGlvbnMKIyBjb2xvciBicmlnaHRncmVlbiAiXnNyY18odW5wYWNrfGNvbXBpbGV8aW5zdGFs
+bCkiICJecGtnXyhjb25maWd8bm9mZXRjaHxzZXR1cHwocHJlfHBvc3QpKGluc3R8cm0pKSIKIyMg
+SGlnaGxpZ2h0IGJhc2ggcmVsYXRlZCBzeW50YXgKIyBjb2xvciBncmVlbiAiXDwoY2FzZXxkb3xk
+b25lfGVsaWZ8ZWxzZXxlc2FjfGV4aXR8Zml8Zm9yfGZ1bmN0aW9ufGlmfGlufGxvY2FsfHJlYWR8
+cmV0dXJufHNlbGVjdHxzaGlmdHx0aGVufHRpbWV8dW50aWx8d2hpbGUpXD4iCiMgY29sb3IgZ3Jl
+ZW4gIihce3xcfXxcKHxcKXxcO3xcXXxcW3xgfFxcfFwkfDx8PnwhfD18JnxcfCkiCiMgY29sb3Ig
+Z3JlZW4gIi0oZXxkfGZ8cnxnfHV8d3x4fEwpXD4iCiMgY29sb3IgZ3JlZW4gIi0oZXF8bmV8Z3R8
+bHR8Z2V8bGV8c3xufHopXD4iCiMjIEhpZ2hsaWdodCB2YXJpYWJsZXMgLi4uIG9mZmljaWFsIHBv
+cnRhZ2Ugb25lcyBpbiByZWQsIGFsbCBvdGhlcnMgaW4gYnJpZ2h0IHJlZAojIGNvbG9yIGJyaWdo
+dHJlZCAiXCRcez9bYS16QS1aXzAtOV0rXH0/IgojIGNvbG9yIHJlZCAiXDwoQVJDSHxIT01FUEFH
+RXxERVNDUklQVElPTnxJVVNFfFNSQ19VUkl8TElDRU5TRXxTTE9UfEtFWVdPUkRTfEZJTEVTRElS
+fFdPUktESVJ8KFB8Uik/REVQRU5EfFBST1ZJREV8RElTVERJUnxSRVNUUklDVClcPiIKIyBjb2xv
+ciByZWQgIlw8KFN8RHxUfFBWfFBGfFB8UE58QSlcPiIgIlw8QyhYWCk/RkxBR1NcPiIKIyMgSGln
+aGxpZ2h0IHBvcnRhZ2UgY29tbWFuZHMKIyBjb2xvciBtYWdlbnRhICJcPHVzZShfKHdpdGh8ZW5h
+YmxlKSk/XD4gW2EtejAtOVggXSoiICJpbmhlcml0LioiCiMgY29sb3IgYnJpZ2h0Ymx1ZSAiZShi
+ZWdpbnxlbmR8Y29uZnxpbnN0YWxsfG1ha2V8d2FybnxpbmZvbj98ZXJyb3J8cGF0Y2gpIgojIGNv
+bG9yIGJyaWdodGJsdWUgIlw8ZGllXD4iICJcPHVzZShfKHdpdGh8ZW5hYmxlKSk/XD4iICJcPGlu
+aGVyaXRcPiIgIlw8aGFzXD4iICJcPChoYXN8YmVzdClfdmVyc2lvblw+IiAiXDx1bnBhY2tcPiIK
+IyBjb2xvciBicmlnaHRibHVlICJcPChkb3xuZXcpKGluc3xzP2Jpbnxkb2N8bGliKHxcLnNvfFwu
+YSl8bWFufGluZm98ZXhlKVw+IgojIGNvbG9yIGJyaWdodGJsdWUgIlw8ZG8ocHl0aG9ufHNlZHxk
+aXJ8aGFyZHxzeW18aHRtbHxqYXJ8bW8pXD4iICJcPGtlZXBkaXJcPiIgCiMgY29sb3IgYnJpZ2h0
+Ymx1ZSAicHJlcGFsbCh8ZG9jc3xpbmZvfG1hbnxzdHJpcCkiICJwcmVwKGluZm98bGlifGxpYlwu
+c298bWFufHN0cmlwKSIKIyBjb2xvciBicmlnaHRibHVlICJcPCh8ZG9jfGluc3xleGUpaW50b1w+
+IiAiXDxmKG93bmVyc3xwZXJtcylcPiIgIlw8KGV4ZXxpbnMpb3B0c1w+IgojIyBIaWdobGlnaHQg
+Y29tbW9uIGNvbW1hbmRzIHVzZWQgaW4gZWJ1aWxkcwojIGNvbG9yIGJsdWUgIlw8bWFrZVw+IiAi
+XDwoY2F0fGNkfGNobW9kfGNob3dufGNwfGVjaG98ZW52fGV4cG9ydHxncmVwfGxldHxsbnxta2Rp
+cnxtdnxybXxzZWR8c2V0fHRhcnx0b3VjaHx1bnNldClcPiIKIyMgSGlnaGxpZ2h0IGNvbW1lbnRz
+IChkb2VzbnQgd29yayB0aGF0IHdlbGwpCiMgY29sb3IgeWVsbG93ICIjLiokIgojIyBIaWdobGln
+aHQgc3RyaW5ncyAoZG9lc250IHdvcmsgdGhhdCB3ZWxsKQojIGNvbG9yIGJyaWdodHllbGxvdyAi
+IihcXC58W15cIl0pKiIiICInKFxcLnxbXiddKSonIgo=
+</file64>
+  <file64 name="nanorc-patch" assoc="proj" proj="70cd4c7b-b920-4668-941e-fd317880d4e6">
+CiMjIEhlcmUgaXMgYW4gZXhhbXBsZSBmb3IgcGF0Y2ggZmlsZXMKIyMKIyBzeW50YXggInBhdGNo
+IiAiXC4ocGF0Y2h8ZGlmZikkIgojIGNvbG9yIGJyaWdodGdyZWVuICJeXCsuKiIKIyBjb2xvciBn
+cmVlbiAiXlwrXCtcKy4qIgojIGNvbG9yIGJyaWdodGJsdWUgIl4gLioiCiMgY29sb3IgYnJpZ2h0
+cmVkICJeLS4qIgojIGNvbG9yIHJlZCAiXi0tLS4qIgojIGNvbG9yIGJyaWdodHllbGxvdyAiXkBA
+LioiCiMgY29sb3IgbWFnZW50YSAiXmRpZmYuKiIK
+</file64>
+  <file64 name="nanorc-sh" assoc="proj" proj="70cd4c7b-b920-4668-941e-fd317880d4e6">
+CiMjIEhlcmUgaXMgYW4gZXhhbXBsZSBmb3Igc2hlbGwgc2NyaXB0cwojIwojIHN5bnRheCAic2hl
+bGxzY3JpcHQiICJcLnNoJCIKIyBjb2xvciBicmlnaHRncmVlbiAiXlthLXpBLVpfMC05XStcKFwp
+IgojIGNvbG9yIGdyZWVuICJcPChjYXNlfGRvfGRvbmV8ZWxpZnxlbHNlfGVzYWN8ZXhpdHxmaXxm
+b3J8ZnVuY3Rpb258aWZ8aW58bG9jYWx8cmVhZHxyZXR1cm58c2VsZWN0fHNoaWZ0fHRoZW58dGlt
+ZXx1bnRpbHx3aGlsZSlcPiIKIyBjb2xvciBncmVlbiAiKFx7fFx9fFwofFwpfFw7fFxdfFxbfGB8
+XFx8XCR8PHw+fCF8PXwmfFx8KSIKIyBjb2xvciBncmVlbiAiLShlfGR8ZnxyfGd8dXx3fHh8TClc
+PiIKIyBjb2xvciBncmVlbiAiLShlcXxuZXxndHxsdHxnZXxsZXxzfG58eilcPiIKIyBjb2xvciBi
+cmlnaHRibHVlICJcPG1ha2VcPiIgIlw8KGNhdHxjZHxjaG1vZHxjaG93bnxjcHxlY2hvfGVudnxl
+eHBvcnR8Z3JlcHxpbnN0YWxsfGxldHxsbnxta2RpcnxtdnxybXxzZWR8c2V0fHRhcnx0b3VjaHx1
+bWFza3x1bnNldClcPiIKIyBjb2xvciBicmlnaHRyZWQgIlwkXHs/W2EtekEtWl8wLTldK1x9PyIK
+IyBjb2xvciB5ZWxsb3cgIiMuKiQiCiMgY29sb3IgYnJpZ2h0eWVsbG93ICIiKFxcLnxbXlwiXSkq
+IiIgIicoXFwufFteJ10pKiciCg==
+</file64>
+</xmonolith>

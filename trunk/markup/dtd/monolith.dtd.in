@@ -1,0 +1,17 @@
+<!ELEMENT xmonolith (groups, (proj|versioning|xbuild|file|file64)*)>
+
+<!ELEMENT file (#PCDATA)*>
+<!ATTLIST file name CDATA #REQUIRED
+               assoc (proj|xbuild) #REQUIRED
+               proj IDREF #IMPLIED
+               xbuild IDREF #IMPLIED>
+
+<!ELEMENT file64 (#PCDATA)*> <!-- BASE64 encoded -->
+<!ATTLIST file64 name CDATA #REQUIRED
+                 assoc (proj|xbuild) #REQUIRED
+                 proj IDREF #IMPLIED
+                 xbuild IDREF #IMPLIED>
+
+<!ENTITY % IFMONOLITH 'INCLUDE'>
+<!ENTITY % IFNOTMONO 'IGNORE'>
+

@@ -1,0 +1,56 @@
+<!ELEMENT dict (entry)*> <!-- a.k.a std::map, keyed array, associative array, hash... -->
+
+<!ELEMENT bool (#PCDATA)*>
+<!ELEMENT int (#PCDATA)*>    <!-- the deserialiser knows what length it is -->
+<!ELEMENT float (#PCDATA)*>  <!-- likewise -->
+<!ELEMENT string (#PCDATA)*>
+
+<!ELEMENT lctexts (lctext+)>
+<!ELEMENT lctext (#PCDATA)>
+<!ATTLIST lctext
+	lang CDATA #REQUIRED>
+
+<!ELEMENT description (lctext+)>
+
+<!-- Either one base64 element or all text -->
+
+<!ELEMENT key (#PCDATA | base64)*>
+<!ATTLIST key
+	check CDATA #IMPLIED> <!-- A MD5sum or SHA1sum or CRC etc. of the data (before encoding, after decoding) -->
+	                      <!-- md5sum:d41d8cd98f00b204e9800998ecf8427e or sha1sum:da39a3ee5e6b4b0d3255bfef95601890afd80709 -->
+
+<!ELEMENT signature (#PCDATA | base64)*>
+<!ATTLIST signature
+	signer CDATA #REQUIRED
+	check CDATA #IMPLIED> <!-- signer is a URI-like field. Example:
+	                           dev:johndoe@zynot.org
+	                           keyserver:keyserver.net/95324ACD
+	                           group:core@zynot.org -->
+
+<!ELEMENT uri (#PCDATA)>
+<!ELEMENT null EMPTY> <!-- This may be cast to any type -->
+
+<!ELEMENT inforef (#PCDATA)*>
+<!ATTLIST inforef
+	role CDATA #REQUIRED> <!-- What kind of information? Project WWW? Documentation? etc. -->
+
+<!ELEMENT rating (rvalue|dynrating)+>
+<!ATTLIST rating
+	role CDATA #REQUIRED> <!-- What kind of rating? XBuild trust? Package trust? etc. -->
+
+<!ELEMENT rvalue (signature)>
+<!ATTLIST rvalue
+	value CDATA #REQUIRED> <!-- Numerical, floating point -->
+
+<!ELEMENT dynrating (uri)+>
+<!ATTLIST dynrating 
+	type (rvalue|signedvotes) 'signedvotes'
+	combiner (disjunction|conjunction) 'disjunction'>
+
+<!ENTITY % entryTypes 'bool|int|float|string|lctexts|dict|uri|null'>
+
+<!ELEMENT entry (%entryTypes;)>
+<!ATTLIST entry
+	key ID #REQUIRED>
+
+<!ELEMENT base64 (#PCDATA)*>

@@ -1,0 +1,11 @@
+<!ELEMENT manifest (filemeta)*>
+
+<!ELEMENT digest (#PCDATA)*>
+<!ATTLIST digest
+	type (md5sum | sha1sum) 'md5sum'>
+
+<!ELEMENT filemeta (digest?, signature?)>
+<!ATTLIST filemeta
+	uri CDATA #REQUIRED> <!-- can be the URI it was downloaded from, if a source file -->
+
+%commonDTD;

@@ -1,0 +1,155 @@
+ S := ( '\t' | ' ' )+
+ N := ( '\f' | '\n' | '\r' | '\n\r' )+
+ SN := ( S | N ) +
+ 
+ hex := '0-9A-Fa-f'
+ uuid := hex{8,8} '-' hex{4,4} '-' hex{4,4} '-' hex{4,4} '-' hex{12,12} 
+ 
+ // An ntoken is a valid ASCII XML name
+ ntoken-head := ( 'a-z' | 'A-Z' | '_' )
+ ntoken-char := ( 'a-z' | 'A-Z' | '0-9' | '_' | '.' | ':' | '-' )
+ ntoken: ntokenhead (ntoken-char)*
+ 
+ name: ntoken
+
+ wordtoken-char := ( '-' | '_' | '.' | '0-9' | 'A-Z' | 'a-z' )
+
+ wordtoken := (wordtoken-char)*
+
+ list-head := '[' (S)*
+ list-tail := (S)* ']'
+
+ version-key := ( wordtoken | list-head wordtoken wordtoken? list-tail )
+ version-comparator := ( 'eq' | 'ne' | 'ge' | 'gt' | 'le' | 'lt' )
+ version-constraint := version-comparator version-key
+
+ option-comparator := ( '+' | '-' )
+ option-name := wordtoken
+ option-selector := option-comparator wordtoken
+ option-list := list-head option-selector ((S)+ option-selector)* list-tail
+ 
+ with-constraint := 'with' (S)+ option-list
+ 
+ constraint := ( version-constraint | with-constraint )
+ 
+ keyword-head := ('A-Z' | 'a-z')
+ keyword-char := ('A-Z' | 'a-z' | '0-9' | '-' | '_' | '.' | '>')
+ keyword-name := keyword-head (keyword-char)*
+ keyword-selector := keyword-name
+ keyword-list := list-head keyword-selector ((S)+ keyword-selector)* list-tail
+ 
+ subpackage-name := wordtoken
+ 
+ project-name := wordtoken
+ project-selector := [ keyword-list '::' ] project-name [ '::' subpackage-name ]
+  
+ with-expression := [ package-selector '.' ] 'with?' (S)+ option-list
+ 
+ test-expression := ( 'host' | 'build' ) (S)+ 'is' (S)+ wordtoken
+ 
+ bool-leaf-expr := ( with-expression | test-expression | not-expression | grouped-bool-expr )
+ not-expression := ( 'not' (S)+ ( grouped-bool-expr | bool-leaf-expr ) ) // In other words, the not combines immediately with the following expression.
+ bool-combiner := ( 'and' | 'or' | 'xor' ) // Combines, leftmost to rightmost. i.e. true xor false xor true xor false == (((true xor false) xor true) xor false)
+ bool-expression :=  ( bool-leaf-expr | ( bool-leaf-expr (S)+ bool-combiner (S)+ bool-leaf-expr ) | ( bool-expression (S)+ bool-combiner (S)+ bool-leaf-expr )
+ grouped-bool-expr := '(' (S)* bool-expression (S)* ')'
+ 
+ dependency := ( package-dependency | conditional-dependency )
+ 
+ if-expression := 'if?' (S)+ list-head bool-expression list-tail
+ 
+ then-dependency := 'then' (S)+ list-head dependency list-tail
+ else-dependency := 'else' (S)+ list-head dependency list-tail
+ conditional-dependency := ( with-expression | if-expression ) then-dependency [else-dependency]
+
+ constraint := ( version-constraint | conditional-constraint | with-constraint )
+ then-constraint := 'then' (S)+ list-head constraint list-tail
+ else-constraint := 'else' (S)+ list-head constraint list-tail 
+ conditional-constraint := ( with-expression | if-expression ) then-constraint [else-constraint]
+  
+ package-selector := project-selector constraint*
+ package-dependency := package-selector
+ 
+ dependency-specification := dependency*
+ 
+ examples:
+
+dependencies of gnucash:
+<dep>
+  [gnome.extra]::gnome-utils ge 1.4 with? [+nls] then [with [+nls]] <!-- gnome-utils-1.4 with +nls if with +nls, otherwise, don't care -->
+  [devel]::autotools ge 1.6 <!-- at least autotools-1.6 -->
+  with? [+sql] then [[database.server]: postgres::libs] <!-- postgres -->
+</dep>
+
+but it also allows things like that 
+<dep>
+  C.with? [+ssl] then [A] <!-- if package C has ssl support then require package A -->
+</dep>
+
+declaring a virtual dependency is simple, no special syntax needed:
+<dep>
+  x11
+</dep>
+
+if you want to make sure the virtual dependency fulfills certain requirements, use keyword constraints:
+<dep>
+  [net.www browser.graphical browser.x11 browser.gecko]::browser
+</dep>
+
+As for keywords, '.' is declares a subkeyword of sorts:
+
+net.www
+
+declares the www keyword as part of the net keyword. So, anything declared with a net.www keyword also has a net keyword. However, the www keyword does not exist outside the net keyword.
+
+I should define some more keyword operators so that categories can be fine tuned. For instance:
+
+'net www browser' means that, a user can browse for it in a XBuild browser through these paths:
+
+net
+net/www
+net/www/browser
+net/browser
+net/browser/www
+www
+www/net
+www/net/browser
+www/browser
+www/browser/net
+browser
+browser/net
+browser/net/www
+browser/www
+browser/www/net
+
+Clearly, some of them are nonsensical. Primarily, those that have net after www. So, if we use
+'net.www browser' instead:
+
+net
+net/www
+net/www/browser
+net/browser
+browser
+browser/net
+browser/net/www
+
+Better, but not the best. If we use
+'net>www browser' instead:
+
+net
+net/www
+net/www/browser
+net/browser
+net/browser/www
+www
+www/browser
+browser
+browser/net
+browser/net/www
+browser/www
+
+The above, is the best my opinion.
+
+For more information about the 5 types of dependencies, see http://pad.zynot.org/~zllow/DependencyUseCases.html
+
+The parsing can be done quite easy using spirit.sf.net (yes boost again)
+

@@ -1,0 +1,16 @@
+<!ELEMENT devlist (dev+)>
+
+<!ELEMENT dev EMPTY>
+<!ATTLIST dev
+	id ID #REQUIRED
+	email CDATA #IMPLIED
+	name CDATA #REQUIRED> <!-- id must be ASCII, unique -->
+
+<!-- @reftype DEVREF -->
+
+<!ELEMENT externalcontrib EMPTY>
+<!ATTLIST externalcontrib
+	name CDATA #REQUIRED
+	email CDATA #IMPLIED>
+	
+<!-- @reftype EXTERNALREF -->

@@ -1,0 +1,14 @@
+<!ENTITY % dtdindex PUBLIC "DTD Index" "http://purl.org/zynot/xeta/current/dtd/dtdindex.dtd">
+%dtdindex;
+
+<!ENTITY % IFMONOLITH 'IGNORE'>
+<!ENTITY % IFNOTMONO 'INCLUDE'>
+
+<!ENTITY % GROUPREF 'CDATA'>
+<!ENTITY % DEVREF 'CDATA'>
+<!ENTITY % EXTERNALREF 'CDATA'>
+<!ENTITY % LICENCEREF 'CDATA'>
+<!ENTITY % PROJREF 'CDATA'>
+<!ENTITY % XBUILDREF 'CDATA'>
+<!ENTITY % OBJREF 'CDATA'>
+

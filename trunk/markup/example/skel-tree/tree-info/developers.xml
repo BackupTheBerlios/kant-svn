@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+This file contains metadata that pertains the whole tree. It is needed
+to import into the tables of the db that Xeta uses. Normally you should
+not mess with this file, but of course all dev references used in any
+XBuild must be present here. Let the tree responsible person handle it.
+-->
+<devlist>
+	<dev id="apokorny" name="Andreas Pokorny" email="apokorny@zynot.org"/>
+	<dev id="fdhin" name="Frantz Dhin" email="fdhin@zynot.org"/>
+	<dev id="jmorgan" name="Jack Morgan" email="jmorgan@zynot.org"/>
+	<!-- Your entry here. Alphabetically please -->
+</devlist>

@@ -1,0 +1,11 @@
+<!-- @depend people.dtd groups.dtd -->
+
+<!ELEMENT maintainers (devref | groupref)*>
+<!ELEMENT devref EMPTY>
+<!ATTLIST devref
+	dev %DEVREF; #REQUIRED>
+
+<!ELEMENT groupref EMPTY>
+<!ATTLIST groupref
+	group %GROUPREF; #REQUIRED>
+

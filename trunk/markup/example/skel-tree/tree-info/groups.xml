@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+This file contains metadata that pertains the whole tree. It is needed
+to import into the tables of the db that Xeta uses. Normally you should
+not mess with this file. Let the tree responsible person handle it.
+--> 
+<groups>
+	<group id="zynot-dev" name="Zynot Developers">
+		<devref dev="apokorny"/>
+		<devref dev="fdhin"/>
+		<groupref group="random_irc_helpers"/>
+	</group>
+	
+	<group id="random_irc_helpers" name="Random IRC Helpers">
+	</group>
+	<!-- sequence of other groups .. -->
+</groups>

@@ -1,0 +1,23 @@
+<!-- @reftype LICENCEREF -->
+
+<!ELEMENT licence (lmeta, (licenceref | ldisjunction | lconjunction | lbody))>
+<!ATTLIST licence
+	id ID #REQUIRED> <!-- id must be ASCII only, and unique -->
+
+<!ELEMENT lmeta (legalname)>
+
+<!ELEMENT legalname (#PCDATA)*>
+
+<!ELEMENT lbody (uri | base64 | ltext)*> <!-- accomodate varying degrees of verbatim -->
+
+%commonDTD;
+
+<!ELEMENT ltext (#PCDATA)*>
+
+<!ELEMENT licenceref EMPTY>
+<!ATTLIST licenceref
+	licence %LICENCEREF; #REQUIRED>
+
+<!ELEMENT ldisjunction (licenceref | ldisjunction | lconjunction)+>
+
+<!ELEMENT lconjunction (licenceref | ldisjunction | lconjunction)+>

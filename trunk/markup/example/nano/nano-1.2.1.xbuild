@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xbuild SYSTEM "http://jupiter.zynot.org/~zllow/XBuilds/dtd/xbuild.dtd">
+<!--
+ Copyright 1999-2003 Gentoo Technologies, Inc.
+ Distributed under the terms of the GNU General Public License v2
+-->
+<xbuild uuid="587cdc71-dff2-4f1c-aab8-03de18d2912c" ver="1.2.1" proj="70cd4c7b-b920-4668-941e-fd317880d4e6">
+  <metadata>
+    <src>http://www.nano-editor.org/dist/v1.2/nano-1.2.1.tar.gz</src>
+    <license name="GPL-2"/>
+    <usability>
+      <arch name="x86" level="1.0"/>
+      <arch name="ppc" level="1.0"/>
+      <arch name="sparc" level="1.0"/>
+      <arch name="alpha" level="1.0"/>
+      <arch name="mips" level="1.0"/>
+      <arch name="hppa" level="1.0"/>
+      <arch name="arm" level="0.5"/>
+      <arch name="amd64" level="1.0"/>
+    </usability>
+    <dep>
+      build,run {
+        [core,libs]:ncurses &gt;=5.2
+        nls ? ( [core,libs]:gettext )
+      }
+    </dep>
+    <iuse>nls build spell justify</iuse>
+    <srcdir>${WORKDIR}/${P}</srcdir>
+  </metadata>
+  <code lang="bash">
+
+src_unpack() {
+	unpack ${A}
+	cd ${S}
+	epatch ${FILESDIR}/nanohupterm.patch
+}
+
+src_compile() {
+	use build &amp;&amp; myconf=&quot;${myconf} --disable-wrapping-as-root&quot;
+
+	econf \
+		--bindir=/bin \
+		--enable-color \
+		--enable-multibuffer \
+		--enable-nanorc \
+		`use_enable justify` \
+		`use_enable spell` \
+		`use_enable nls` \
+		${myconf} \
+		|| die &quot;configure failed&quot;
+	emake || die
+}
+
+src_install() {
+	make DESTDIR=${D} install || die
+
+	use build \
+		&amp;&amp; rm -rf ${D}/usr/share \
+		|| dodoc ChangeLog README nanorc.sample AUTHORS BUGS NEWS TODO \
+		&amp;&amp; dohtml *.html
+
+	dodir /usr/bin
+	dosym /bin/nano /usr/bin/nano
+}
+  </code>
+</xbuild>

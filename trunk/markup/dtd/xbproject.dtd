@@ -1,0 +1,11 @@
+<!-- @depend common.dtd xbcommon.dtd maintainers.dtd -->
+
+<!ELEMENT proj (inforef, maintainers, name+, sdesc, ldesc, keywords)>
+<!ATTLIST proj
+	uuid ID #REQUIRED>
+	
+<!-- @reftype PROJREF -->
+
+%commonDTD;
+%xbcommonDTD;
+%maintainersDTD;

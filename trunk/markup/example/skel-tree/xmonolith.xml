@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!DOCTYPE xmonolith PUBLIC "-//Zynot//Xeta 1.0 XBuild Monolith//EN" "http://svn.zynot.org/svn/zynot/projects/xeta/trunk/xbuilds/dtd/monolith.dtd">
+<!-- we will use utf-8 where possible -->
+<!-- Not as complete as skel.ebuild   -->
+
+<!-- Questions: 
+1. How will the uuid look like?
+uppercase or lowercase, fine with me.
+[0-9a-fA-F]{8,8}-[0-9a-fA-F]{4,4}-[0-9a-fA-F]{4,4}-[0-9a-fA-F]{4,4}-[0-9a-fA-F]{12,12}
+
+2. Why do we need the tags groups, lctexts, xbvlist, dict? 
+groups: because you can't define an xml document without a surrounding document element.
+lctexts: can be collapsed, true. could also be replaced with dict.
+dict: this is an encapsulated data structure.
+
+3. How will the 'id' attribute of group look like? 
+a word/name is fine.
+
+-->
+
+<!-- i added notes if parts are optional .. so most of that stuff is REQUIRED do be accepted by the validator -->
+
+<xmonolith> <!-- has no attributes-->
+	<!-- a single groups tag -->
+	<groups> <!-- has no attributes--> <!-- do we need that tag?-->
+		<group id="zynot-dev" name="Zynot Developers">
+			<devref dev="apokorny"/> <!-- confused about how dev attribute should look like -->
+			<devref dev="fdhin"/>
+			<groupref group="random_irc_helpers"/> <!-- hmm -->
+		</group>
+		<group id="random_irc_helpers" name="Random IRC Helpers">
+		</group>
+		<!-- sequence of other groups .. -->
+	</groups>
+
+	<devlist>
+		<dev id="apokorny" name="Andreas Pokorny" email="apokorny@zynot.org"/>
+		<dev id="fdhin" name="Frantz Dhin" email="fdhin@zynot.org"/>
+	</devlist>
+
+	<!-- Projects : -->
+	<proj uuid="632b9-5cc2-4b42-92b9-a0dc42e1ca48">
+		<www>http://www.xeta.org</www>
+		<maintainers> <!-- can be omitted -->
+			<groupref group="zynot-dev"/> 
+			<!-- sequence of groups and developer references.. -->
+		</maintainers>
+		<name>xeta</name><!-- there must be at least one name --><!-- discuss naming policy -->
+		<name>The Package Manager</name>
+		<name>Portage Replacement</name>
+		<name>Dusk of Portage</name>
+		<sdesc>
+			<lctext lang="en">A new nice fast and really cool Packagemanager</lctext>
+			<lctext lang="de">Ein neuer schöner schneller und wirklich cooler Pketmanager</lctext>
+		</sdesc>
+		<ldesc>
+			<lctext lang="en">
+				Long blabla about the future of linux networks and 
+				workstation computing, for everyone .. Some cool 
+				abrevations that noone really understands .. </lctext>
+			<lctext lang="de">
+				Viel blabla über die Zukunft von Linuxnetzwerken und 
+				...</lctext>
+		</ldesc>
+		<!-- space delimited keywords, from a fixed vocabulary -->
+		<keywords>xeta pkgmgr</keywords> 
+	</proj>
+	<!-- sequence of projects .. -->
+
+	<!-- version information dedicated to a project: -->
+	<versioning proj="632b9-5cc2-4b42-92b9-a0dc42e1ca48">
+		<xbvref key="1.0.1" xbuild="aaceb9-5dc0-1b42-92b9-a0dc42e1ca48"/>
+		<xbvref key="1.1-beta1" xbuild="afeb9-5dc0-1b42-92b9-a0dc42e1ca42"/>
+	</versioning>
+
+	<xbuild uuid="aaceb9-5dc0-1b42-92b9-a0dc42e1ca48" 
+		proj="632b9-5cc2-4b42-92b9-a0dc42e1ca48" 
+		revision="1" schemarev="1.0" type="metapkg"> 
+		<!-- revision should be integer. (If possible, subversion revision number) -->
+		<!-- type can be metapkg standard or config, standard is the default value -->
+
+		<!-- Inheritance of xbuilds: -->
+		<inherit xbuild="00feafb9-0e0a-4b42-92b9-a0dc42e1ca48"/>
+		<inherit xbuild="f5a632b9-5cc2-4b42-92b9-a0dc42e1ca48"/>
+
+		<hmetadata> <!-- hmetadata and all subtags are optional-->
+		</hmetadata>
+
+		<metadata>
+			<!-- optional Sequence of subpackages: -->
+			<subpkg uuid="aaaadef9-5cc2-4b42-92b9-a0dc42e1ca48" name="installer"/>
+			<subpkg uuid="a25b0ade-c5ae-4051-887c-da16ca0bf7cd" name="libs"/>
+			<subpkg uuid="ffadffff-5cc2-4b42-92b9-a0dc42e1ca48" name="dev"/>
+
+			<!-- optional Sequence of sources -->
+			<!-- type is auto | tbz2 | tgz | zip | plain | noauto and auto is the default value-->
+			<src type="tbz2" unpackto="patches/kerberos5" ifuse="krb5 + beta"> 
+				<!-- you can replace uri with a base64 tag here -->
+				<uri>http://www.zynot.org/downloads/alpha1.tar.bz2</uri>
+			</src>
+
+			<!-- optional -->
+			<slot>
+				<dict>  <!--do we need that tag?-->
+					<!-- Sequence of entries: -->
+					<entry key="keyvalue">
+						<!-- Entry contains a single tag of : auto | tbz2 | tgz | zip | plain | noauto -->
+						<int>0</int>
+					</entry>
+				</dict>
+			</slot>
+
+			<!-- optional -->
+			<license name="LGPL-2" />
+
+			<!-- optional -->
+			<pkgstatus onarch="x86 Z1" testlevel="-100" polluri="??"/>
+
+			<!-- TODO We have to define an extended dependency languange FIXME !-->
+			<dep> boost-1.30 bash </dep>
+
+			<!--optional -->
+			<initialpath>xeta/alpha-1.0/src/</initialpath>
+
+			<!--optional -->		
+			<option name="krb5" default="yes"> <!-- default of default is no -->
+				If used with beta, enable experimental Kerberos 5 support.
+			</option>
+			<option name="beta" default="no"> 
+				Enable experimental features.
+			</option>
+
+		</metadata>
+
+		<!-- codelang can be sh,bash,perl,python -->
+		<!-- content is PCDATA so & < > need to be replaced -->
+		<code codelang="sh"> 
+			#!/bin/sh
+			echo "this is just a dummy code since you should have xeta already to install that package"
+		</code>
+
+
+	</xbuild>
+
+	<!-- Adding a text file as PCDATA  -->
+	<!-- assoc define the owner of that file .. assoc is either proj or xbuild -->
+	<!-- When adding a patch to an xbuild the developer has to use the attribute  xbuild instead of proj -->
+	<file name="skel.xbuild.xml" assoc="proj" proj="632b9-5cc2-4b42-92b9-a0dc42e1ca48">  
+		hum .. i tried to add this file here .. but i failed somehow :)
+	</file>
+
+	<!-- If one needs to add small binary file the file64 tag should be used-->
+	<!-- file64 uses the same set of attributes -->
+
+</xmonolith>

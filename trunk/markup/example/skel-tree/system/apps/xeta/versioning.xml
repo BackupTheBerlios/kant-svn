@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!--
+This file contains the version history of a project. It is necessary because Xeta must be
+able to find the uuid of a specific version of a package.
+-->
+<versioning proj="632b9-5cc2-4b42-92b9-a0dc42e1ca48">
+	<xbvref key="1.0.1" xbuild="aaceb9-5dc0-1b42-92b9-a0dc42e1ca48"/>
+	<xbvref key="1.1-beta1" xbuild="afeb9-5dc0-1b42-92b9-a0dc42e1ca42"/>
+</versioning>

@@ -1,0 +1,16 @@
+<!--@depend xbuild.dtd-->
+
+<!ELEMENT versioning (xbref+)>
+<!ATTLIST versioning
+	proj %PROJREF; #REQUIRED>
+
+<!ELEMENT xbvref EMPTY>
+<!ATTLIST xbvref
+	upstreamversion CDATA #REQUIRED
+	internalversion CDATA #REQUIRED
+	order CDATA #REQUIRED
+	xbuild %XBUILDREF; #REQUIRED> <!-- key is unique throughout the project, and
+	                                   preferably throughout any of the virtual projects, but not in between.
+	                                   order is a dot delimited signed integer field -->
+
+

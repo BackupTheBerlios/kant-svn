@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE proj SYSTEM "http://jupiter.zynot.org/~zllow/XBuilds/dtd/xbproject.dtd">
+<proj uuid="70cd4c7b-b920-4668-941e-fd317880d4e6">
+  <www>http://www.nano-editor.org/</www>
+  <maintainers>
+    <group name="core"/>
+  </maintainers>
+  <name>nano</name>
+  <name>virtual/text-editor</name>
+  <sdesc>
+    <lctext lang="en">clone of Pico with more functions in a smaller size</lctext>
+  </sdesc>
+  <ldesc>
+    <lctext lang="en">Insert long description here</lctext>
+  </ldesc>
+  <keywords>
+    app,text,editor,core
+  </keywords>
+</proj>

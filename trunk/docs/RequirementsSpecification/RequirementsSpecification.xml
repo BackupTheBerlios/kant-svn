@@ -1,0 +1,1165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<article>
+  <articleinfo>
+    <title>Xeta Package Management System Requirements Specification</title>
+  </articleinfo>
+  <sect1>
+    <title>Requirement Specification for Requirement Specifications</title>
+    <para>Note from Frantz Dhin: These requirements are merely collected. Now they must be detailed to a level where they can be handed off to designers, testers and documentation writers. Furthermore we will use formal tracking of the requirements for easier management which means that they must each be labelled through a hierarchical numbering scheme. A few hints about good and bad requirements specifications: Each requirement should be detailed enough for any developer to instantly understand it. Each requirement must centre around what, and not how. The requirements must not contain any design assumptions. Redundancy should be minimised. Software requirements are documented in an attempt to specify:</para>
+    <itemizedlist>
+      <title/>
+      <listitem>
+        <para>A software capability needed by the user to solve a problem in order to to achieve an objective.</para>
+      </listitem>
+      <listitem>
+        <para>A software capability that must be met or possessed by a system or system component to satisfy a contract, standard, specification, or other formally imposed documentation.</para>
+      </listitem>
+    </itemizedlist>
+  </sect1>
+  <sect1>
+    <title>Terminology</title>
+    <para>In an attempt to move away from Gentoo speak I have introduced some generic terminology for various things it would be good to come up with some nice names for these.</para>
+    <para/>
+    <itemizedlist>
+      <title/>
+      <listitem>
+        <para>build host : the machine on which `source packages' are processed to make `derived packages'.</para>
+      </listitem>
+      <listitem>
+        <para>build architecture : the architecture of the build host.</para>
+      </listitem>
+      <listitem>
+        <para>host : the machine on which a `derived package' is to be installed.</para>
+      </listitem>
+      <listitem>
+        <para>host architecture : the architecture of the host.</para>
+      </listitem>
+      <listitem>
+        <para>target architecture : the architecture for which a compiler generates code for.</para>
+      </listitem>
+      <listitem>
+        <para>project : a single application or library. Not an umbrella project, like GNOME or KDE.</para>
+      </listitem>
+      <listitem>
+        <para>package : a specific version of a project.</para>
+      </listitem>
+      <listitem>
+        <para>Package metadata : Data associated with a package that contains its dependencies, supported architectures, build options etc...</para>
+      </listitem>
+      <listitem>
+        <para>XBuild : ebuild equivalent, provides the code to convert a `source package' into a `derived package'.</para>
+      </listitem>
+      <listitem>
+        <para>optional feature flag : USE flag equivalent.</para>
+      </listitem>
+      <listitem>
+        <para>source package : an object that is needed for the processing phase. Typically a source archive or a binary archive.</para>
+      </listitem>
+      <listitem>
+        <para>supplemental file : an object that is needed for any phase. Typically a patch to be applied before processing.</para>
+      </listitem>
+      <listitem>
+        <para>derived package : a package in a pluggable format ready for installation on a `target', similar to an RPM.</para>
+      </listitem>
+      <listitem>
+        <para>XBuild repository : a repository containing XBuilds and supplemental files, which can be individually accessed.</para>
+      </listitem>
+      <listitem>
+        <para>source repository : a repository containing source packages, which can be individually accessed.</para>
+      </listitem>
+      <listitem>
+        <para>BOM : Bill of Materials, a list of installed files for one XBuild.</para>
+      </listitem>
+      <listitem>
+        <para>pluggable : user selectable implementation</para>
+      </listitem>
+      <listitem>
+        <para>acceptability rating : equivalent of `arch', '~arch' and '-arch' (Is this needed? Is it not covered in the requirement for multiple repositories? - galik) (Not really, priority and acceptability is different. - zhenlin)</para>
+      </listitem>
+      <listitem>
+        <para>acceptable acceptability rating: equivalent of ACCEPT_KEYWORDS (Is this needed? Is it not covered in the requitement for multiple repositories? - galik) (Not really, priority and acceptability is different. - zhenlin)</para>
+      </listitem>
+    </itemizedlist>
+    <para>Attention: Use of the term `source package' is deprecated. Use the broader term `source file' instead.</para>
+    <itemizedlist>
+      <title>Ternary can/may/cannot</title>
+      <listitem>
+        <para>can : allowed</para>
+      </listitem>
+      <listitem>
+        <para>may : permissible</para>
+      </listitem>
+      <listitem>
+        <para>cannot : not allowed</para>
+      </listitem>
+    </itemizedlist>
+    <itemizedlist>
+      <title>Ternary must/should/could</title>
+      <listitem>
+        <para>must : this item cannot be left out.</para>
+      </listitem>
+      <listitem>
+        <para>should : this item can be left out, but this course of action is not preferred.</para>
+      </listitem>
+      <listitem>
+        <para>could : this item is only an example - it can be done another way.</para>
+      </listitem>
+    </itemizedlist>
+    <itemizedlist>
+      <title>Breakdowns</title>
+      <listitem>
+        <para>all : x = 100%</para>
+      </listitem>
+      <listitem>
+        <para>many : 75% &lt;= x &lt; 100%</para>
+      </listitem>
+      <listitem>
+        <para>most : 45% &lt;= x &lt; 75%</para>
+      </listitem>
+      <listitem>
+        <para>some : 0 &lt; x &lt; 45%</para>
+      </listitem>
+      <listitem>
+        <para>none : x = 0%</para>
+      </listitem>
+    </itemizedlist>
+    <itemizedlist>
+      <title>Probability</title>
+      <listitem>
+        <para>certainly : p = 100%</para>
+      </listitem>
+      <listitem>
+        <para>very likely : 75% &lt;= p &lt; 100%</para>
+      </listitem>
+      <listitem>
+        <para>likely : 50% &lt;= p &lt; 75%</para>
+      </listitem>
+      <listitem>
+        <para>unlikely : 25% &lt;= p &lt; 50%</para>
+      </listitem>
+      <listitem>
+        <para>never : p = 0%</para>
+      </listitem>
+    </itemizedlist>
+    <itemizedlist>
+      <title>Functionality</title>
+      <listitem>
+        <para>equivalent : functionality equal to or greater than.</para>
+      </listitem>
+    </itemizedlist>
+    <para>A default setting constitutes as a user-defined setting.</para>
+    <para>To-do: Use correct must, should and could terminology.</para>
+  </sect1>
+  <sect1>
+    <title>Requirements</title>
+    <para/>
+    <orderedlist>
+      <listitem>
+        <para>Package Manager Codebase</para>
+        <orderedlist>
+          <listitem>
+            <para>It should be possible to use the same codebase on different platforms easily.</para>
+            <orderedlist>
+              <listitem>
+                <para>(Delayed) The package manager should have minimal dependencies. Dependencies include language features, external libraries and operating system APIs.</para>
+                <orderedlist>
+                  <listitem>
+                    <para>The dependencies should either be extremely ubiquitous or be compliant to clause 1.a.</para>
+                  </listitem>
+                </orderedlist>
+              </listitem>
+            </orderedlist>
+          </listitem>
+          <listitem>
+            <para>(Delayed) Components for use on embedded hosts should be optimised for smaller size.</para>
+          </listitem>
+        </orderedlist>
+      </listitem>
+      <listitem>
+        <para>(Priority) Data</para>
+        <orderedlist>
+          <listitem>
+            <para>Most packages have dependencies on other packages.</para>
+            <orderedlist>
+              <listitem>
+                <para>Package metadata expresses the dependencies for a package.</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+          <listitem>
+            <para>Projects have metadata, such as a description, and/or keywords.</para>
+            <orderedlist>
+              <listitem>
+                <para>Packages may include additional version-specific descriptions and/or keywords.</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+          <listitem>
+            <para>Many packages have optional features.</para>
+            <orderedlist>
+              <listitem>
+                <para>These are enabled/disabled by optional feature flags.</para>
+                <orderedlist>
+                  <listitem>
+                    <para>Package metadata should document the effect of each feature flag on the output of an XBuild.</para>
+                  </listitem>
+                </orderedlist>
+              </listitem>
+            </orderedlist>
+          </listitem>
+          <listitem>
+            <para>It is possible that projects have names that collide.</para>
+            <orderedlist>
+              <listitem>
+                <para>Therefore, it must be possible to distinguish between two projects with the same name.</para>
+                <orderedlist>
+                  <listitem>
+                    <para>All projects must have a identifier that is separate from the name. This identifies two distinct projects.</para>
+                  </listitem>
+                </orderedlist>
+              </listitem>
+              <listitem>
+                <para>Projects may deliberately have a name that collides with one or more other projects. This can be used to define a group of projects that provide the same service, such as XFree86 and XDirectFB.</para>
+                <orderedlist>
+                  <listitem>
+                    <para>It should be possible to assign defaults to groups.</para>
+                  </listitem>
+                </orderedlist>
+              </listitem>
+            </orderedlist>
+          </listitem>
+          <listitem>
+            <para>XBuilds from different repositories may collide. Therefore, the package manager must be able to:</para>
+            <orderedlist>
+              <listitem>
+                <para>Identify which repository an XBuild is from.</para>
+              </listitem>
+              <listitem>
+                <para>Select an XBuild using a user-defined policy.</para>
+                <orderedlist>
+                  <listitem>
+                    <para>This policy may be automatic.</para>
+                  </listitem>
+                  <listitem>
+                    <para>This policy may require a decision from the user.</para>
+                  </listitem>
+                </orderedlist>
+              </listitem>
+            </orderedlist>
+          </listitem>
+          <listitem>
+            <para>A derived package must carry the following information, in addition to the derived files:</para>
+            <orderedlist>
+              <listitem>
+                <para>Any data required for implementation of clause 5.a.ii.</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+          <listitem>
+            <para>It should be possible to build a package repository that builds on the work of another repository, therefore:</para>
+            <orderedlist>
+              <listitem>
+                <para>Package metadata should be able to utilise and/or override package metadata in another repository.</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+        </orderedlist>
+      </listitem>
+      <listitem>
+        <para>(Priority) Basic Features</para>
+        <orderedlist>
+          <listitem>
+            <para>(Core) The package manager must be able to manage derived packages.</para>
+            <orderedlist>
+              <listitem>
+                <para>The package manager must keep track of which files are installed by which packages. Therefore, a BOM must be kept. The BOM must have this information for every item:</para>
+                <orderedlist>
+                  <listitem>
+                    <para>Type: file, directory, symbolic link, /dev node, etc.</para>
+                  </listitem>
+                  <listitem>
+                    <para>Installation `root' directory</para>
+                  </listitem>
+                  <listitem>
+                    <para>Path relative to the installation `root'.</para>
+                  </listitem>
+                  <listitem>
+                    <para>Target, if a symbolic link.</para>
+                  </listitem>
+                  <listitem>
+                    <para>Major and minor numbers, if a /dev node. (This is unlikely, and is considered a 'should' clause.)</para>
+                  </listitem>
+                  <listitem>
+                    <para>MD5 digest (or equivalent) of contents, if a file.</para>
+                  </listitem>
+                  <listitem>
+                    <para>Time of install (same units as filesystem modification time).</para>
+                  </listitem>
+                </orderedlist>
+              </listitem>
+              <listitem>
+                <para>The package manager must create the BOM only when the derived package is installed .</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+          <listitem>
+            <para>(Core) The package manager must be able to install derived packages. This should be done automatically, unless overridden.</para>
+            <orderedlist>
+              <listitem>
+                <para>If installation requires the overwriting of existing files then the package manager must follow a policy.</para>
+                <orderedlist>
+                  <listitem>
+                    <para>A file can be overwritten. if the file satisfies the following conditions:</para>
+                    <orderedlist>
+                      <listitem>
+                        <para>The file matches the BOM recorded checksum.</para>
+                      </listitem>
+                      <listitem>
+                        <para>The file is not explicitly protected by a user-defined protection list.</para>
+                      </listitem>
+                      <listitem>
+                        <para>The existing file belongs to a package that cannot co-exist with the package owning the new file.</para>
+                      </listitem>
+                    </orderedlist>
+                  </listitem>
+                  <listitem>
+                    <para>If a file can be overwritten, then it should be overwritten and a note should be made in the BOM.</para>
+                  </listitem>
+                  <listitem>
+                    <para>If the file cannot be overwritten, then action is taken according to a user defined policy.</para>
+                    <orderedlist>
+                      <listitem>
+                        <para>The policy may allow the file to be `auto updated'.</para>
+                      </listitem>
+                      <listitem>
+                        <para>The policy may require the original to be backed up before being overwritten.</para>
+                      </listitem>
+                      <listitem>
+                        <para>The policy may require that the original is not overwritten but the new file is placed in a holding area awaiting a decision by the user.</para>
+                      </listitem>
+                      <listitem>
+                        <para>The policy may require user input.</para>
+                      </listitem>
+                    </orderedlist>
+                  </listitem>
+                </orderedlist>
+              </listitem>
+            </orderedlist>
+          </listitem>
+          <listitem>
+            <para>(Core) The package manager must be able to uninstall derived packages.</para>
+            <orderedlist>
+              <listitem>
+                <para>The package manager must only remove existing files if all of the following conditions are fulfilled:</para>
+                <orderedlist>
+                  <listitem>
+                    <para>Same type as recorded.</para>
+                  </listitem>
+                  <listitem>
+                    <para>Same target as recorded, if a symbolic link, as recorded.</para>
+                  </listitem>
+                  <listitem>
+                    <para>Same major and minor numbers, if a /dev node, as recorded.</para>
+                  </listitem>
+                  <listitem>
+                    <para>Same MD5sum (or equivalent) of contents, if a file, as recorded.</para>
+                  </listitem>
+                  <listitem>
+                    <para>Earlier than or same modification time as recorded installation time.</para>
+                  </listitem>
+                  <listitem>
+                    <para>Explicitly unprotected by a user-defined protection mask.</para>
+                  </listitem>
+                  <listitem>
+                    <para>Implicitly unprotected by a user-defined protection list.</para>
+                  </listitem>
+                </orderedlist>
+              </listitem>
+            </orderedlist>
+          </listitem>
+          <listitem>
+            <para>The package manager must be able to upgrade packages. This must be done is this order:</para>
+            <orderedlist>
+              <listitem>
+                <para>The package manager installs the new version of the package in the normal manner.</para>
+              </listitem>
+              <listitem>
+                <para>The package manager uninstalls the old version of the package in the normal manner.</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+          <listitem>
+            <para>(Core) Most packages have dependencies. Therefore, package metadata must be able to:</para>
+            <orderedlist>
+              <listitem>
+                <para>Require `derived packages' compiled for the build architecture on the build host.</para>
+              </listitem>
+              <listitem>
+                <para>Require `derived packages' compiled for the build architecture with target architecture overrides on the build host.</para>
+              </listitem>
+              <listitem>
+                <para>Require `derived packages' compiled for the host architecture on the build host.</para>
+              </listitem>
+              <listitem>
+                <para>Require `derived packages' compiled for the host architecture with target architecture overrides on the host.</para>
+              </listitem>
+              <listitem>
+                <para>Require `derived packages' compiled for the host architecture on the host.</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+          <listitem>
+            <para>(Core) Many optional features have additional dependencies. Therefore, package metadata must be able to:</para>
+            <orderedlist>
+              <listitem>
+                <para>Require additional `derived packages' compiled for the build architecture on the build host based on optional feature flags.</para>
+              </listitem>
+              <listitem>
+                <para>Require additional `derived packages' compiled for the build architecture with target architecture overrides on the build host based on optional feature flags.</para>
+              </listitem>
+              <listitem>
+                <para>Require additional `derived packages' compiled for the host architecture on the build host based on optional feature flags.</para>
+              </listitem>
+              <listitem>
+                <para>Require additional `derived packages' compiled for the host architecture with target architecture overrides on the host based on optional feature flags.</para>
+              </listitem>
+              <listitem>
+                <para>Require additional `derived packages' compiled for the host architecture on the host based on optional feature flags.</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+          <listitem>
+            <para>(Core) Several optional features change the behaviour of a package. Therefore, XBuilds must be able to:</para>
+            <orderedlist>
+              <listitem>
+                <para>Require additional `derived packages' compiled for the build architecture with specified optional feature flags on the build host.</para>
+              </listitem>
+              <listitem>
+                <para>Require additional `derived packages' compiled for the build architecture with target architecture overrides and with specified optional feature flags on the build host.</para>
+              </listitem>
+              <listitem>
+                <para>Require additional `derived packages' compiled for the host architecture with specified optional feature flags on the build host.</para>
+              </listitem>
+              <listitem>
+                <para>Require additional `derived packages' compiled for the host architecture with target architecture overrides on the host with specified optional feature flags on the host.</para>
+              </listitem>
+              <listitem>
+                <para>Require additional `derived packages' compiled for the host architecture with specified optional feature flags on the host.</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+          <listitem>
+            <para>(Core) There are optional features which require dependencies to have additional features enabled/disabled. Therefore, package metadata should be able to:</para>
+            <orderedlist>
+              <listitem>
+                <para>Require additional `derived packages' compiled for the processing architecture with specified optional feature flags on the build host based on optional feature flags.</para>
+              </listitem>
+              <listitem>
+                <para>Require additional `derived packages' compiled for the processing architecture with target architecture overrides and with specified optional feature flags on the build host based on optional feature flags. (See clause 7.1)</para>
+              </listitem>
+              <listitem>
+                <para>Require additional `derived packages' compiled for the target architecture with specified optional feature flags on the build host based on optional feature flags.</para>
+              </listitem>
+              <listitem>
+                <para>Require additional `derived packages' compiled for the host architecture with target architecture overrides on the host with specified optional feature flags on the host based on optional feature flags.</para>
+              </listitem>
+              <listitem>
+                <para>Require additional `derived packages' compiled for the target architecture with specified optional feature flags on the `target' based on optional feature flags.</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+          <listitem>
+            <para>(Core) The package manager must be able to resolve the dependencies.</para>
+          </listitem>
+          <listitem>
+            <para>(Core) The package manager should be able to ignore the dependencies.</para>
+            <orderedlist>
+              <listitem>
+                <para>The package manager should be able to only ignore dependencies that require a reconversion of an existing package.</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+          <listitem>
+            <para>(Delayed) The package manager must also perform a pseudo-regression test before starting. That is to say, the package manager must check in advance that no installed derived packages will conflict with ones about to be installed, or vice-versa. This could be done by:</para>
+            <orderedlist>
+              <listitem>
+                <para>Creating a list of packages that are on the system after the operation.</para>
+              </listitem>
+              <listitem>
+                <para>Resolving their dependencies.</para>
+              </listitem>
+              <listitem>
+                <para>Reporting any packages that will be broken.</para>
+              </listitem>
+              <listitem>
+                <para>Halting the operation if any exist.</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+          <listitem>
+            <para>The package manager must not automatically rebuild existing packages.</para>
+          </listitem>
+        </orderedlist>
+      </listitem>
+      <listitem>
+        <para>Flexible Data Storage and Retrieval</para>
+        <orderedlist>
+          <listitem>
+            <para>To improve efficiency, it must be possible for the user to select one or more mirror/cache repositories to retrieve data from. Therefore:</para>
+            <orderedlist>
+              <listitem>
+                <para>The package manager must accommodate mirror/cache repositories to be queried before the authoritative repository.</para>
+              </listitem>
+              <listitem>
+                <para>(Delayed) The package manager may have the ability to retrieve incremental patches for source files from remote or local repositories. Questionable</para>
+              </listitem>
+              <listitem>
+                <para>(Delayed) The package manager may have the ability to retrieve incremental patches for derived packages from remote or local repositories. Questionable</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+          <listitem>
+            <para>Users may want to use 3rd party providers of XBuilds for packages. Therefore, the package manager:</para>
+            <orderedlist>
+              <listitem>
+                <para>Must accommodate multiple sources of remote package metadata.</para>
+              </listitem>
+              <listitem>
+                <para>Must accommodate multiple sources of local package metadata.</para>
+              </listitem>
+              <listitem>
+                <para>Must accommodate multiple sources of remote XBuild repositories.</para>
+              </listitem>
+              <listitem>
+                <para>Must accommodate multiple sources of local XBuild repositories.</para>
+              </listitem>
+              <listitem>
+                <para>Must accommodate multiple sources of remote source package repositories.</para>
+              </listitem>
+              <listitem>
+                <para>Must accommodate multiple sources of local source package repositories.</para>
+              </listitem>
+              <listitem>
+                <para>Must accommodate multiple sources of remote derived package repositories.</para>
+              </listitem>
+              <listitem>
+                <para>Must accommodate multiple sources of local derived package repositories.</para>
+              </listitem>
+              <listitem>
+                <para>Must accommodate multiple sources of remote supplemental file repositories.</para>
+              </listitem>
+              <listitem>
+                <para>Must accommodate multiple sources of local supplimental file repositories.</para>
+              </listitem>
+              <listitem>
+                <para>To reduce redundant data transfers, caching of remotely stored data is needed. Therefore, the package manager must also be able to:</para>
+                <orderedlist>
+                  <listitem>
+                    <para>Verify integrity of cached objects.</para>
+                  </listitem>
+                  <listitem>
+                    <para>Verify age of cached objects.</para>
+                  </listitem>
+                  <listitem>
+                    <para>Cache XBuilds from remote XBuild repositories.</para>
+                  </listitem>
+                  <listitem>
+                    <para>Cache source packages from remote repositories.</para>
+                  </listitem>
+                  <listitem>
+                    <para>Cache supplemental files from remote repositories.</para>
+                  </listitem>
+                  <listitem>
+                    <para>Cache derived packages from remote repositories.</para>
+                  </listitem>
+                </orderedlist>
+              </listitem>
+            </orderedlist>
+          </listitem>
+        </orderedlist>
+      </listitem>
+      <listitem>
+        <para>Persistent Stores</para>
+        <orderedlist>
+          <listitem>
+            <para>It will be convenient to store information in a database. Therefore, the package manager should must the ability to:</para>
+            <orderedlist>
+              <listitem>
+                <para>Store information about projects and packages in a pluggable database. This should include:</para>
+                <orderedlist>
+                  <listitem>
+                    <para>Project metadata</para>
+                  </listitem>
+                  <listitem>
+                    <para>Package metadata</para>
+                  </listitem>
+                </orderedlist>
+              </listitem>
+              <listitem>
+                <para>Store information about packages installed on the local host or a remote host in a pluggable database on the local host or a remote host. This must include:</para>
+                <orderedlist>
+                  <listitem>
+                    <para>BOM for the package.</para>
+                  </listitem>
+                  <listitem>
+                    <para>Repository from which the data originated. (One for each type, or file)</para>
+                    <orderedlist>
+                      <listitem>
+                        <para>Whether or not it was overridden on invocation.</para>
+                      </listitem>
+                    </orderedlist>
+                  </listitem>
+                  <listitem>
+                    <para>Optional feature flags used globally.</para>
+                  </listitem>
+                  <listitem>
+                    <para>Optional feature flags overridden on invocation.</para>
+                  </listitem>
+                  <listitem>
+                    <para>Compilation flags after filtering.</para>
+                  </listitem>
+                  <listitem>
+                    <para>Compilation flags used globally.</para>
+                  </listitem>
+                  <listitem>
+                    <para>Compilation flags overridden upon invocation.</para>
+                  </listitem>
+                  <listitem>
+                    <para>Acceptable `acceptability' rating used globally.</para>
+                  </listitem>
+                  <listitem>
+                    <para>Acceptable `acceptability' rating overridden on invocation.</para>
+                  </listitem>
+                  <listitem>
+                    <para>Other such information that will be useful for repeatable experiments. (Placeholder)</para>
+                  </listitem>
+                </orderedlist>
+              </listitem>
+            </orderedlist>
+          </listitem>
+          <listitem>
+            <para>It will be convenient to change options affecting output on a per-project basis. Therefore, the package manager should be able to:</para>
+            <orderedlist>
+              <listitem>
+                <para>Enable/disable optional feature flags on a per-invocation basis that remain `sticky' across upgrades.</para>
+              </listitem>
+              <listitem>
+                <para>Change acceptable `acceptability' rating on a per-invocation basis that remain `sticky' across upgrades. (Isn`t this accomodated by the requirement for multiple repositories?)</para>
+              </listitem>
+              <listitem>
+                <para>Change compilation flags on a per-invocation basis that remain `sticky' across upgrades.</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+        </orderedlist>
+      </listitem>
+      <listitem>
+        <para>Automation and Management</para>
+        <orderedlist>
+          <listitem>
+            <para>(Priority) It will be convenient to define `metapackages' that represent umbrella projects, such as GNOME or KDE. Therefore:</para>
+            <orderedlist>
+              <listitem>
+                <para>Package metadata should be able to define a package as a simple aggregate of other packages/projects.</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+          <listitem>
+            <para>(Priority) The package manager should maintain multiple lists of `managed packages' that can be updated en masse (like /var/edb/cache/world).</para>
+          </listitem>
+          <listitem>
+            <para>The package manager should report differences in options affecting output for a rebuilt package, preferably before the conversion process starts.</para>
+          </listitem>
+          <listitem>
+            <para>Users may want to create a ubiquitous environment. Therefore, the package manager must be able to:</para>
+            <orderedlist>
+              <listitem>
+                <para>(Core) Process a source package once, but deploy the derived output multiple times.</para>
+              </listitem>
+              <listitem>
+                <para>(Priority) Create an sub-hierarchy using archived derived packages.</para>
+              </listitem>
+              <listitem>
+                <para>(Priority) Create an sub-hierarchy using package BOMs. This will allow for modified configurations.</para>
+                <orderedlist>
+                  <listitem>
+                    <para>If a file is listed in the BOM, it will be copied into the sub-hierarchy, whether or not it matches the other criteria listed in the BOM.</para>
+                  </listitem>
+                </orderedlist>
+              </listitem>
+              <listitem>
+                <para>Optionally invoke an external program to strip the sub-hierarchy of unused code.</para>
+              </listitem>
+              <listitem>
+                <para>(Priority) Optionally allow user intervention between the above and below step.</para>
+              </listitem>
+              <listitem>
+                <para>(Priority) Optionally package the sub-hierarchy into an aggregate file, such as a compressed archive, or a disk image.</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+          <listitem>
+            <para>(Priority) Users may want to perform dangerous experiments on their system. Therefore:</para>
+            <orderedlist>
+              <listitem>
+                <para>XBuilds should be able to mark files as critical data.</para>
+                <orderedlist>
+                  <listitem>
+                    <para>The package manager should maintain a list of those files.</para>
+                    <orderedlist>
+                      <listitem>
+                        <para>(Delayed) That list should be in a format for which a backup program can utilise.</para>
+                      </listitem>
+                    </orderedlist>
+                  </listitem>
+                </orderedlist>
+              </listitem>
+            </orderedlist>
+          </listitem>
+          <listitem>
+            <para>A package may break binary compatibility with previous versions. Therefore, XBuilds must be able to:</para>
+            <orderedlist>
+              <listitem>
+                <para>Force or suggest recompilation of packages dependant on the package being changed to prevent damage.</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+          <listitem>
+            <para>(Core) Package metadata should be able to specify whether or not a package can be installed in parallel with other versions, and with which versions.</para>
+          </listitem>
+          <listitem>
+            <para>(Core) The package manager should be able to treat packages of the same version but compiled for different host architectures as different packages.</para>
+<!-- Clarified -->
+          </listitem>
+          <listitem>
+            <para>(Core) The package manager should be able to treat packages of the same version but compiled with different target architectures as different packages.</para>
+<!-- Clarified -->
+          </listitem>
+          <listitem>
+            <para>(Priority) The package manager must be able to globally impose feature flags onto XBuilds.</para>
+            <orderedlist>
+              <listitem>
+                <para>(Delayed) The package manager should be able to report `safest' conversion flags based on statistics.</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+          <listitem>
+            <para>The package manager should be able to group feature flags.</para>
+            <orderedlist>
+              <listitem>
+                <para>The package manager should be able to globally impose feature flag groups onto XBuilds.</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+          <listitem>
+            <para>(Delayed) The package manager should be able to restart running software after installing an upgrade.</para>
+          </listitem>
+          <listitem>
+            <para>(Delayed) The package manager should be able to install derived packages in a sub-hierarchy of the filesystem.</para>
+          </listitem>
+          <listitem>
+            <para>(Delayed) The package manager should have a pluggable configuration system. These could include:</para>
+            <orderedlist>
+              <listitem>
+                <para>Text files in /etc/.</para>
+              </listitem>
+              <listitem>
+                <para>A remote database, shared among several systems.</para>
+              </listitem>
+            </orderedlist>
+          </listitem>     
+          <listitem>
+            <para>The configurations should be overlayable, so that it is possible to have local overrides to a shared configuration.</para>
+          </listitem>    
+        </orderedlist>
+      </listitem>
+      <listitem>
+        <para>(Delayed) Cross-Compiling</para>
+        <orderedlist>
+          <listitem>
+            <para>It will be convenient to execute XBuilds on any supported build host architecture to generate output for any supported target architecture. Therefore, the package manager should be able to:</para>
+            <orderedlist>
+              <listitem>
+                <para>Accept, on a per-invocation basis, overrides for the target architecture, for compilers.</para>
+              </listitem>
+              <listitem>
+                <para>Accept, on a per-invocation basis, overrides for the host architecture, for compiled software. (Including compilers)</para>
+              </listitem>
+              <listitem>
+                <para>Install packages for architectures that are not the host`s in a sub-hierarchy of the filesystem, for cross-compiling.</para>
+              </listitem>
+              <listitem>
+                <para>Use alternative tools for generating derived packages from source files, such as powerpc-unknown-linux-gnu-gcc vs. i686-pc-linux-gnu, or gcc vs. icc.</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+        </orderedlist>
+      </listitem>
+      <listitem>
+        <para>(Core) Processing</para>
+        <orderedlist>
+          <listitem>
+            <para>The following steps are involved in processing:</para>
+            <orderedlist>
+              <listitem>
+                <para>Processing</para>
+                <orderedlist>
+                  <listitem>
+                    <para>(Build host, host) Preparation of system environment. (pkg_setup)</para>
+                  </listitem>
+                  <listitem>
+                    <para>(Build host) Preparation of working environment, usually by unpacking/copying source files. (src_unpack)</para>
+                  </listitem>
+                  <listitem>
+                    <para>(Build host) Producing derived files from files in the working environment. (src_compile)</para>
+                  </listitem>
+                  <listitem>
+                    <para>(Build host) Copying the derived files into a hierarchy (`derived hierarchy'), ready for packaging. (src_install)</para>
+                  </listitem>
+                  <listitem>
+                    <para>(Build host) Stripping unnecessary files from a derived hierarchy, such as documentation.</para>
+                  </listitem>
+                </orderedlist>
+              </listitem>
+              <listitem>
+                <para>Optional archival storing of `derived package' including BOM</para>
+                <orderedlist>
+                  <listitem>
+                    <para>(Build host) Storing of the `derived package' in a local repository.</para>
+                  </listitem>
+                  <listitem>
+                    <para>(Build host) Storing the `derived package' in a remote repository.</para>
+                  </listitem>
+                </orderedlist>
+              </listitem>
+              <listitem>
+                <para>Optional installing of `derived package' and BOM (updated to reflect actions of the installation).</para>
+                <orderedlist>
+                  <listitem>
+                    <para>(Host) Before merging a derived hierarchy into the active hierarchy. (pkg_preinst)</para>
+                  </listitem>
+                  <listitem>
+                    <para>(Host) After merging a derived hierarchy into the active hierarchy. (pkg_postinst)</para>
+                  </listitem>
+                  <listitem>
+                    <para>(Host) Before removing installed files from the active hierarchy. (pkg_prerm)</para>
+                  </listitem>
+                  <listitem>
+                    <para>(Host) After removing installed files from the active hierarchy. (pkg_postrm)</para>
+                  </listitem>
+                  <listitem>
+                    <para>(Host) Optional configuration. (pkg_config)</para>
+                  </listitem>
+                </orderedlist>
+              </listitem>
+            </orderedlist>
+          </listitem>
+          <listitem>
+            <para>(Delayed) All stages of converting from requesting a `source package' to installing a `derived package' should be externally available and controllable (API).</para>
+          </listitem>
+          <listitem>
+            <para>(Core) All stages of converting from requesting a `source package' to installing a `derived package' must be able to be aborted.</para>
+            <orderedlist>
+              <listitem>
+                <para>(Delayed) The package manager must support the ability to rollback changes to the active filesystem.</para>
+                <orderedlist>
+                  <listitem>
+                    <para>This behaviour should be the default.</para>
+                  </listitem>
+                  <listitem>
+                    <para>This behaviour could be implemented as such:</para>
+                    <orderedlist>
+                      <listitem>
+                        <para>Copy the original file to a holding space.</para>
+                      </listitem>
+                      <listitem>
+                        <para>Overwrite the original file with the new file.</para>
+                      </listitem>
+                      <listitem>
+                        <para>Remove the backup when the whole merge is completed.</para>
+                      </listitem>
+                      <listitem>
+                        <para>Otherwise, if the merge is interrupted, copy the backups over the new ones.</para>
+                      </listitem>
+                    </orderedlist>
+                  </listitem>
+                </orderedlist>
+              </listitem>
+            </orderedlist>
+          </listitem>
+          <listitem>
+            <para>(Delayed) All stages of converting from requesting a `source package' to installing a `derived package' should be able to be paused and resumed.</para>
+          </listitem>
+          <listitem>
+            <para>(Priority) All stages of converting from requesting a `source package' to installing a `derived package' must not assume that they will be executed on the same host.</para>
+          </listitem>
+          <listitem>
+            <para>(Delayed) The package manager should be able to automatically invoke a program to strip unused code from a static compiled executable.</para>
+          </listitem>
+          <listitem>
+            <para>(Priority) The package manager must be able to automatically invoke a program to strip symbols from all compiled binaries.</para>
+          </listitem>
+        </orderedlist>
+      </listitem>
+      <listitem>
+        <para>(Delayed) Parallel/Distributed Processing</para>
+        <orderedlist>
+          <listitem>
+            <para>(Priority) Package metadata must be able to specify whether or not it can be converted on architectures other than the host`s.</para>
+          </listitem>
+          <listitem>
+            <para>There will be many steps to process a list of packages. These steps may not require to be executed linearly. Therefore, the package manager must be able to:</para>
+            <orderedlist>
+              <listitem>
+                <para>Retrieve source and supplemental files independently of conversion.</para>
+              </listitem>
+              <listitem>
+                <para>Convert source packages as soon as:</para>
+                <orderedlist>
+                  <listitem>
+                    <para>All source and supplemental files have been retrieved.</para>
+                  </listitem>
+                  <listitem>
+                    <para>All dependencies have been installed on the processor.</para>
+                  </listitem>
+                </orderedlist>
+              </listitem>
+              <listitem>
+                <para>Install derived packages on the target as soon as conversion is completed.</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+        </orderedlist>
+      </listitem>
+      <listitem>
+        <para>Miscellaneous XBuild output related features</para>
+        <orderedlist>
+          <listitem>
+            <para>(Delayed) The package manager should be able to incorporate profiling information from GCC when processing source packages.</para>
+          </listitem>
+          <listitem>
+            <para>(Delayed) The package manager should be able to invoke a program to prelink installed compiled binaries.</para>
+          </listitem>
+        </orderedlist>
+      </listitem>
+      <listitem>
+        <para>(Delayed) Client/Server/P2P Architecture</para>
+        <orderedlist>
+          <listitem>
+            <para>Offering Services</para>
+            <orderedlist>
+              <listitem>
+                <para>The package manager should be able to provide information so that a host can operate as a server for:</para>
+                <orderedlist>
+                  <listitem>
+                    <para>Client requests for package metadata.</para>
+                  </listitem>
+                  <listitem>
+                    <para>Client requests for package XBuilds.</para>
+                  </listitem>
+                  <listitem>
+                    <para>Client requests for source packages.</para>
+                  </listitem>
+                  <listitem>
+                    <para>Client requests for supplemental files.</para>
+                  </listitem>
+                  <listitem>
+                    <para>Client requests for derived packages.</para>
+                  </listitem>
+                  <listitem>
+                    <para>Client submissions of derived packages.</para>
+                  </listitem>
+                </orderedlist>
+              </listitem>
+              <listitem>
+                <para>The package manager should be able to be the master of a build farm.</para>
+              </listitem>
+              <listitem>
+                <para>The package manager should be able to be a node in a build farm.</para>
+              </listitem>
+              <listitem>
+                <para>A P2P network can be formed by enabling client/server operations and using a service availability announcement protocol on each host.</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+          <listitem>
+            <para>Using Services</para>
+            <orderedlist>
+              <listitem>
+                <para>The package manager should be able to request package metadata from a server.</para>
+              </listitem>
+              <listitem>
+                <para>The package manager should be able to request package XBuilds from a server.</para>
+              </listitem>
+              <listitem>
+                <para>The package manager should be able to request source packages from a server.</para>
+              </listitem>
+              <listitem>
+                <para>The package manager should be able to request derived packages from a server.</para>
+              </listitem>
+              <listitem>
+                <para>The package manager should be able to request supplimental files from a server.</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+          <listitem>
+            <para>Communications</para>
+            <orderedlist>
+              <listitem>
+                <para>The package manager should be able to send and receive processing status and queries for it.</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+        </orderedlist>
+      </listitem>
+      <listitem>
+        <para>(Priority) Plug-ins Architecture</para>
+        <orderedlist>
+          <listitem>
+            <para>The database should be pluggable.</para>
+          </listitem>
+          <listitem>
+            <para>The package manager should be able to accommodate runtime plug-ins.</para>
+          </listitem>
+        </orderedlist>
+      </listitem>
+      <listitem>
+        <para>(Delayed) Integration</para>
+        <orderedlist>
+          <listitem>
+            <para>The package manager should provide a way to integrate with CPAN (and other similar systems). Therefore, the package manager should be able to automatically:</para>
+            <orderedlist>
+              <listitem>
+                <para>Generate project metadata for each project in such a system.</para>
+              </listitem>
+              <listitem>
+                <para>Generate package metadata for each version of each project in such a system.</para>
+              </listitem>
+              <listitem>
+                <para>Generate XBuilds for each version of each project in such a system.</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+        </orderedlist>
+      </listitem>
+      <listitem>
+        <para>Efficiency</para>
+        <orderedlist>
+          <listitem>
+            <para>Controllable nice (priority) level of operation.</para>
+          </listitem>
+        </orderedlist>
+      </listitem>
+      <listitem>
+        <para>(Delayed) Licensing and Payment</para>
+        <orderedlist>
+          <listitem>
+            <para>The package manager should be able to filter XBuilds by license.</para>
+          </listitem>
+          <listitem>
+            <para>The package manager should be able to require interactive acceptance of a license prior to retrieval of source packages or supplemental files.</para>
+          </listitem>
+          <listitem>
+            <para>The package manager should be able to require interactive acceptance of a bill prior to retrieval of source packages or supplemental files.</para>
+          </listitem>
+          <listitem>
+            <para>The package manager should be able to send an acknowledgement to a billing server after installing a derived package.</para>
+          </listitem>
+        </orderedlist>
+      </listitem>
+      <listitem>
+        <para>(Priority) Multiple choices</para>
+        <orderedlist>
+          <listitem>
+            <para>Whenever there is more than one choice for anything, the package manager should select one using a user-defined policy.</para>
+          </listitem>
+          <listitem>
+            <para>A user-defined policy can be interactive.</para>
+          </listitem>
+        </orderedlist>
+      </listitem>
+      <listitem>
+        <para>(Delayed) Security</para>
+        <orderedlist>
+          <listitem>
+            <para>(Priority) The package manager must, to ensure integrity, validate against a checksum/digest, the content (not the form) of:</para>
+            <orderedlist>
+              <listitem>
+                <para>Source packages.</para>
+              </listitem>
+              <listitem>
+                <para>Derived packages.</para>
+              </listitem>
+              <listitem>
+                <para>Supplemental files.</para>
+              </listitem>
+              <listitem>
+                <para>Package Metadata.</para>
+              </listitem>
+              <listitem>
+                <para>Package XBuilds.</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+          <listitem>
+            <para>The package manager must, to ensure authenticity, validate against a encrypted checksum/digest, the content (not the form) of:</para>
+            <orderedlist>
+              <listitem>
+                <para>Checksum/digest files.</para>
+              </listitem>
+              <listitem>
+                <para>Keyrings.</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+          <listitem>
+            <para>The package manager should, to ensure quality, validate against a encrypted checksum/digest, the content (not the form) of:</para>
+            <orderedlist>
+              <listitem>
+                <para>Supplemental files.</para>
+              </listitem>
+              <listitem>
+                <para>Package Metadata.</para>
+              </listitem>
+              <listitem>
+                <para>Package XBuilds.</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+          <listitem>
+            <para>The package manager should, to ensure authenticity, validate against a encrypted checksum/digest, the content (not the form) of:</para>
+            <orderedlist>
+              <listitem>
+                <para>Source packages.</para>
+              </listitem>
+              <listitem>
+                <para>Supplemental files.</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+          <listitem>
+            <para>Users may want to use 3rd party metadata, XBuilds and/or supplemental files. Therefore, the package manager should be able to:</para>
+            <orderedlist>
+              <listitem>
+                <para>Accept additional checksum/digest files.</para>
+              </listitem>
+              <listitem>
+                <para>Accept additional keyrings.</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+        </orderedlist>
+      </listitem>
+      <listitem>
+        <para>Miscellaneous</para>
+        <orderedlist>
+          <listitem>
+            <para>(Delayed) The package manager should report conversion progress in standardised units like `of time to compile bash'.</para>
+          </listitem>
+        </orderedlist>
+      </listitem>
+    </orderedlist>
+    <para/>
+  </sect1>
+</article>

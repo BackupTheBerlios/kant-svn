@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE article PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<article>
+  <articleinfo>
+    <title>Xeta Package Management System Dependency Use Cases</title>
+  </articleinfo>
+  <sect1>
+    <title>Use Cases</title>
+      <orderedlist>
+          <listitem>
+            <para>Most packages have dependencies. Therefore, package metadata must be able to:</para>
+            <orderedlist>
+              <listitem>
+                <para>Require `derived packages' compiled for the build architecture on the build host.</para>
+                <para>Various tools, such as perl, or tar.</para>
+              </listitem>
+              <listitem>
+                <para>Require `derived packages' compiled for the build architecture with target architecture overrides on the build host.</para>
+                <para>Compilers and similar tools, such as gcc, binutils.</para>
+              </listitem>
+              <listitem>
+                <para>Require `derived packages' compiled for the host architecture on the build host.</para>
+                <para>Link-time and run-time libraries and headers.</para>
+              </listitem>
+              <listitem>
+                <para>Require `derived packages' compiled for the host architecture with target architecture overrides on the host.</para>
+                <para>This is the relationship between gcc and binutils.</para>
+              </listitem>
+              <listitem>
+                <para>Require `derived packages' compiled for the host architecture on the host.</para>
+                <para>Runtime libraries and headers.</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+          <listitem>
+            <para>Many optional features have additional dependencies. Therefore, package metadata must be able to:</para>
+            <orderedlist>
+              <listitem>
+                <para>Require additional `derived packages' compiled for the build architecture on the build host based on optional feature flags.</para>
+              </listitem>
+              <listitem>
+                <para>Require additional `derived packages' compiled for the build architecture with target architecture overrides on the build host based on optional feature flags.</para>
+              </listitem>
+              <listitem>
+                <para>Require additional `derived packages' compiled for the host architecture on the build host based on optional feature flags.</para>
+              </listitem>
+              <listitem>
+                <para>Require additional `derived packages' compiled for the host architecture with target architecture overrides on the host based on optional feature flags.</para>
+              </listitem>
+              <listitem>
+                <para>Require additional `derived packages' compiled for the host architecture on the host based on optional feature flags.</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+          <listitem>
+            <para>Several optional features change the behaviour of a package. Therefore, XBuilds must be able to:</para>
+            <orderedlist>
+              <listitem>
+                <para>Require additional `derived packages' compiled for the build architecture with specified optional feature flags on the build host.</para>
+              </listitem>
+              <listitem>
+                <para>Require additional `derived packages' compiled for the build architecture with target architecture overrides and with specified optional feature flags on the build host.</para>
+              </listitem>
+              <listitem>
+                <para>Require additional `derived packages' compiled for the host architecture with specified optional feature flags on the build host.</para>
+              </listitem>
+              <listitem>
+                <para>Require additional `derived packages' compiled for the host architecture with target architecture overrides on the host with specified optional feature flags on the host.</para>
+              </listitem>
+              <listitem>
+                <para>Require additional `derived packages' compiled for the host architecture with specified optional feature flags on the host.</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+          <listitem>
+            <para>There are optional features which require dependencies to have additional features enabled/disabled. Therefore, package metadata should be able to:</para>
+            <orderedlist>
+              <listitem>
+                <para>Require additional `derived packages' compiled for the processing architecture with specified optional feature flags on the build host based on optional feature flags.</para>
+              </listitem>
+              <listitem>
+                <para>Require additional `derived packages' compiled for the processing architecture with target architecture overrides and with specified optional feature flags on the build host based on optional feature flags. (See clause 7.1)</para>
+              </listitem>
+              <listitem>
+                <para>Require additional `derived packages' compiled for the target architecture with specified optional feature flags on the build host based on optional feature flags.</para>
+              </listitem>
+              <listitem>
+                <para>Require additional `derived packages' compiled for the host architecture with target architecture overrides on the host with specified optional feature flags on the host based on optional feature flags.</para>
+              </listitem>
+              <listitem>
+                <para>Require additional `derived packages' compiled for the target architecture with specified optional feature flags on the `target' based on optional feature flags.</para>
+              </listitem>
+            </orderedlist>
+          </listitem>
+    </orderedlist>
+    <para/>
+  </sect1>
+</article>

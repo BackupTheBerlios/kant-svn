@@ -1,0 +1,10 @@
+<!ELEMENT signedvotes (signedvote+)>
+<!ATTLIST signedvotes
+	object %OBJREF; #IMPLIED> <!-- A URI-like reference. -->
+
+%commonDTD;
+
+<!ELEMENT signedvote (signature)>
+<!ATTLIST signedvote
+	object %OBJREF; #IMPLIED
+	value CDATA #REQUIRED> <!-- For now, +1, -1 -->

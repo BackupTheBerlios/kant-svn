@@ -1,0 +1,69 @@
+<!-- markup declaration of package trees -  Andreas Pokorny, 18.1.2004 missiled by #zynot-dev -->
+<!-- Sanitized a wee bit. Killed phone attribute from office element. Use contactmethod instead. 
+     Added a postaladd child to office for adding a post address.
+	 Made contact an optional empty child of organization. It is just for special attn if needed.
+	 Killed the timezone attribute from contact element. It's implied in office timezone.
+	 23.2.2004 Frantz Dhin.
+	 -->
+<!ELEMENT tree (organization, description, supports+, inforef*)>
+
+<!ATTLIST tree
+	id ID #REQUIRED
+	name CDATA #REQUIRED> <!-- ID must be ASCII and unique, name does not. -->
+
+%commonDTD;
+%peopleDTD;
+
+<!-- A contact regarding the tree.
+     email is a primary method of contact, so it gets an attribute
+     timezone is for scheduling real-time discussions -->
+
+<!-- timezone format should be a timezone identifier, followed by a UTC+xx:xx offset,
+     optionally followed by a alternate timezone identifier, followed by an alternate UTC offset.
+     If required, it will be followed by a series of switchover times (in UTC, of course)
+
+     For example:
+
+     GMT UTC+0 BST UTC+1
+  
+     (The alternate time zone takes effect later in the calendar year than the primary, so it is reversed for southern hemisphere)
+    
+     AEDST UTC+11 AEST UTC+10
+    
+     MYT UTC+8
+    
+     UTC UTC+0
+-->
+
+<!ELEMENT organization (office+)> <!-- The body that provides the package tree -->
+	
+<!ATTLIST organization
+    id ID #REQUIRED
+	name CDATA #REQUIRED>
+	
+<!ELEMENT office (postaladd?,contactmethod+,contact*)>
+
+<!ATTLIST office
+	country CDATA #REQUIRED
+	timezone CDATA #REQUIRED>
+
+<!ELEMENT postaladd (#PCDATA)>
+
+<!ELEMENT contactmethod (#PCDATA)*>
+<!ATTLIST contactmethod
+	method CDATA #REQUIRED>
+
+<!ELEMENT contact EMPTY*>
+<!ATTLIST contact
+	role CDATA #REQUIRED
+	name CDATA #REQUIRED
+	email CDATA #IMPLIED>
+
+<!-- country is a 2 letter code, like US, DE, MY, NZ etc. -->
+<!-- phone number is a full phone number, with country code, area code etc. up to extension  -->
+
+<!ELEMENT supports EMPTY>
+<!ATTLIST supports
+	platform CDATA #REQUIRED>
+
+%commonDTD;

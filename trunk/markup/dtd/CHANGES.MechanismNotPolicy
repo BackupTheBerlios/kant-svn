@@ -1,0 +1,32 @@
+The policy is:
+
+    +----------------------+
+    | MECHANISM NOT POLICY |
+    +----------------------+
+
+OPEN
+====
+#3: -
+    Add mechanisms for accessing real-time trust (of XBuild) rating for XBuilds.
+
+#4: -
+    Add mechanisms for accessing real-time and signed votes of trust (of package) rating for XBuilds.
+    
+#5: -
+    Add mechanisms for accessing any sort of rating for XBuilds. 
+    This mechanism must support static ratings, signed vote ratings, real-time poll ratings, at least.
+    This may obsolete the specialised mechanisms for accessing trust of package, trust of XBuild and test of package ratings.
+    
+
+
+FIXED
+=====
+    
+#1: changelog.dtd: zsaref
+    Changed to saref, replaced zsaid with a URI, for flexibility.
+
+#2: changelog.dtd: inforef
+    Added capability to refer to other types of information.
+
+
+    

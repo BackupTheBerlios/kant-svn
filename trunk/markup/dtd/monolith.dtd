@@ -1,0 +1,67 @@
+<!ELEMENT xmonolith (groups, (proj|versioning|xbuild|file|file64)*)>
+
+<!ELEMENT file (#PCDATA)*>
+<!ATTLIST file name CDATA #REQUIRED
+               assoc (proj|xbuild) #REQUIRED
+               proj IDREF #IMPLIED
+               xbuild IDREF #IMPLIED>
+
+<!ELEMENT file64 (#PCDATA)*> <!-- BASE64 encoded -->
+<!ATTLIST file64 name CDATA #REQUIRED
+                 assoc (proj|xbuild) #REQUIRED
+                 proj IDREF #IMPLIED
+                 xbuild IDREF #IMPLIED>
+
+<!ENTITY % IFMONOLITH 'INCLUDE'>
+<!ENTITY % IFNOTMONO 'IGNORE'>
+
+
+<!ENTITY % M_commonDTD PUBLIC "-//Zynot//DTD Xeta 1.0 Common//EN" "http://purl.org/zynot/xeta/current/dtd/common.dtd">
+<!ENTITY % M_groupsDTD PUBLIC "-//Zynot//DTD Xeta 1.0 Groups//EN" "http://purl.org/zynot/xeta/current/dtd/groups.dtd">
+<!ENTITY % M_maintainersDTD PUBLIC "-//Zynot//DTD Xeta 1.0 Maintainers//EN" "http://purl.org/zynot/xeta/current/dtd/maintainers.dtd">
+<!ENTITY % M_peopleDTD PUBLIC "-//Zynot//DTD Xeta 1.0 People//EN" "http://purl.org/zynot/xeta/current/dtd/people.dtd">
+<!ENTITY % M_changelogDTD PUBLIC "-//Zynot//DTD Xeta 1.0 ChangeLog//EN" "http://purl.org/zynot/xeta/current/dtd/changelog.dtd">
+<!ENTITY % M_licenceDTD PUBLIC "-//Zynot//DTD Xeta 1.0 Licence//EN" "http://purl.org/zynot/xeta/current/dtd/licence.dtd">
+<!ENTITY % M_xbcommonDTD PUBLIC "-//Zynot//DTD Xeta 1.0 XBuild Common//EN" "http://purl.org/zynot/xeta/current/dtd/xbcommon.dtd">
+<!ENTITY % M_xbprojectDTD PUBLIC "-//Zynot//DTD Xeta 1.0 XBuild Project//EN" "http://purl.org/zynot/xeta/current/dtd/xbproject.dtd">
+<!ENTITY % M_xbuildDTD PUBLIC "-//Zynot//DTD Xeta 1.0 XBuild//EN" "http://purl.org/zynot/xeta/current/dtd/xbuild.dtd">
+<!ENTITY % M_manifestDTD PUBLIC "-//Zynot//DTD Xeta 1.0 Manifest//EN" "http://purl.org/zynot/xeta/current/dtd/manifest.dtd">
+<!ENTITY % M_xbversioningDTD PUBLIC "-//Zynot//DTD Xeta 1.0 XBuild Versioning//EN" "http://purl.org/zynot/xeta/current/dtd/xbversioning.dtd">
+<!ENTITY % M_treeDTD PUBLIC "-//Zynot//DTD Xeta 1.0 XBuild Tree Metadata//EN" "http://purl.org/zynot/xeta/current/dtd/tree.dtd">
+<!ENTITY % M_signedvotesDTD PUBLIC "-//Zynot//DTD Xeta 1.0 Signed Votes//EN" "http://purl.org/zynot/xeta/current/dtd/signedvotes.dtd">
+
+<!ENTITY % commonDTD ' '>
+<!ENTITY % groupsDTD ' '>
+<!ENTITY % maintainersDTD ' '>
+<!ENTITY % peopleDTD ' '>
+<!ENTITY % changelogDTD ' '>
+<!ENTITY % licenceDTD ' '>
+<!ENTITY % xbcommonDTD ' '>
+<!ENTITY % xbprojectDTD ' '>
+<!ENTITY % xbuildDTD ' '>
+<!ENTITY % manifestDTD ' '>
+<!ENTITY % xbversioningDTD ' '>
+<!ENTITY % treeDTD ' '>
+<!ENTITY % signedvotesDTD ' '>
+
+<!ENTITY % GROUPREF 'IDREF'>
+<!ENTITY % DEVREF 'IDREF'>
+<!ENTITY % EXTERNALREF 'IDREF'>
+<!ENTITY % LICENCEREF 'IDREF'>
+<!ENTITY % PROJREF 'IDREF'>
+<!ENTITY % XBUILDREF 'IDREF'>
+<!ENTITY % OBJREF 'IDREF'>
+
+%M_commonDTD;
+%M_groupsDTD;
+%M_maintainersDTD;
+%M_peopleDTD;
+%M_changelogDTD;
+%M_licenceDTD;
+%M_xbcommonDTD;
+%M_xbprojectDTD;
+%M_xbuildDTD;
+%M_manifestDTD;
+%M_xbversioningDTD;
+%M_treeDTD;
+%M_signedvotesDTD;

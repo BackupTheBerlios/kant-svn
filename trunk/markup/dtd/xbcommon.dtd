@@ -1,0 +1,6 @@
+<!ELEMENT name (#PCDATA)>
+<!ELEMENT sdesc (lctext+)>
+<!ELEMENT ldesc (lctext+)>
+
+<!ELEMENT keywords (#PCDATA)>
+<!-- keywords are ASCII only. The exact restrictions can be found in the dependency spec. -->

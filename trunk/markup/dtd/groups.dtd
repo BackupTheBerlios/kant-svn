@@ -1,0 +1,16 @@
+<!-- @before maintainers.dtd -->
+
+<!ELEMENT groups (group+)>
+
+<!ELEMENT group (gmetadata?, (devref|groupref)*)>
+<!ATTLIST group 
+	id ID #REQUIRED
+	name CDATA #IMPLIED> <!-- id must be unique, name does not. (id must also be ASCII only, name does not.) -->
+
+<!ELEMENT gmetadata (description?, key?, inforef*)> <!-- Information about the group. -->
+
+<!-- @reftype GROUPREF -->
+
+%commonDTD;
+%maintainersDTD;
+

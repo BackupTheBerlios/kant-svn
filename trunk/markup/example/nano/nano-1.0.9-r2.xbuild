@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xbuild SYSTEM "http://jupiter.zynot.org/~zllow/XBuilds/dtd/xbuild.dtd">
+<!--
+ Copyright 1999-2003 Gentoo Technologies, Inc.
+ Distributed under the terms of the GNU General Public License v2
+-->
+<xbuild uuid="8d4dd227-51b3-43d1-86f5-dd157ab4ce60" ver="1.0.9.2" proj="70cd4c7b-b920-4668-941e-fd317880d4e6">
+  <metadata>
+    <src>http://www.nano-editor.org/dist/v1.0/nano-1.0.9.tar.gz</src>
+    <license name="GPL-2"/>
+    <usability>
+      <arch name="x86" level="1.0"/>
+      <arch name="ppc" level="1.0"/>
+      <arch name="sparc" level="1.0"/>
+      <arch name="alpha" level="1.0"/>
+      <arch name="mips" level="1.0"/>
+      <arch name="hppa" level="1.0"/>
+      <arch name="amd64" level="1.0"/>
+    </usability>
+    <dep>
+      build,run {
+        [core,libs]:ncurses &gt;=5.2
+        nls ? ( [core,libs]:gettext )
+      }
+    </dep>
+    <iuse>nls build slang</iuse>
+    <srcdir>${WORKDIR}/${P}</srcdir>
+  </metadata>
+  <code lang="bash">
+  
+src_compile() {
+	local myconf=&quot;--bindir=/bin --enable-extra&quot;
+	use nls   || myconf=&quot;${myconf} --disable-nls&quot;
+	use build &amp;&amp; myconf=&quot;${myconf} --disable-wrapping-as-root&quot;
+
+	econf ${myconf}
+	emake || die
+}
+
+src_install() {
+	make DESTDIR=${D} install || die
+
+	use build \
+		&amp;&amp; rm -rf ${D}/usr/share \
+		|| dodoc COPYING ChangeLog README
+
+	dodir /usr/bin
+	dosym /bin/nano /usr/bin/nano
+}
+  </code>
+</xbuild>

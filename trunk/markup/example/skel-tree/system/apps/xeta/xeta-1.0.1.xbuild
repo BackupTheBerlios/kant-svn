@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!--
+This is the XBuild itself. It contains the information needed to download,
+compile and install a package. Furthermore it also contains info on package
+dependencies and an option element (more popularly known as a USE flag).
+-->
+
+<xbuild uuid="aaceb9-5dc0-1b42-92b9-a0dc42e1ca48" 
+		proj="632b9-5cc2-4b42-92b9-a0dc42e1ca48" 
+		revision="1" schemarev="1.0" type="metapkg"> 
+	<!-- revision should be integer. (If possible, subversion revision number) -->
+	<!-- type can be metapkg standard or config, standard is the default value -->
+
+	<!-- Inheritance of xbuilds: -->
+	<inherit xbuild="00feafb9-0e0a-4b42-92b9-a0dc42e1ca48"/>
+	<inherit xbuild="f5a632b9-5cc2-4b42-92b9-a0dc42e1ca48"/>
+
+	<hmetadata> <!-- hmetadata and all subtags are optional-->
+	This is where we can put metadata that overrides the project-wide metadata.
+	Only use this element when it is really necessary.
+	</hmetadata>
+
+	<metadata>
+		<!-- optional Sequence of subpackages: -->
+		<subpkg uuid="aaaadef9-5cc2-4b42-92b9-a0dc42e1ca48" name="installer"/>
+		<subpkg uuid="a25b0ade-c5ae-4051-887c-da16ca0bf7cd" name="libs"/>
+		<subpkg uuid="ffadffff-5cc2-4b42-92b9-a0dc42e1ca48" name="dev"/>
+
+		<!-- optional Sequence of sources -->
+		<!-- type is auto | tbz2 | tgz | zip | plain | noauto and auto is the default value-->
+		<src type="tbz2" unpackto="patches/kerberos5" ifuse="krb5 && beta"> 
+			<!-- you can replace uri with a base64 tag here -->
+			<uri>http://www.zynot.org/downloads/alpha1.tar.bz2</uri>
+		</src>
+
+		<!-- optional -->
+		<slot>
+			<dict>  <!--do we need that tag?-->
+				<!-- Sequence of entries: -->
+				<entry key="keyvalue">
+					<!-- Entry contains a single tag of : auto | tbz2 | tgz | zip | plain | noauto -->
+					<int>0</int>
+				</entry>
+			</dict>
+		</slot>
+		<!-- optional -->
+		<license name="LGPL-2" />
+		<!-- optional -->
+		<pkgstatus onarch="x86 Z1" testlevel="-100" polluri="??"/>
+
+		<!-- TODO We have to define an extended dependency languange FIXME !-->
+		<dep> boost-1.30 bash </dep>
+
+		<!--optional -->
+		<initialpath>xeta/alpha-1.0/src/</initialpath>
+
+		<!--optional -->		
+		<option name="krb5" default="yes"> <!-- default of default is no -->
+			If used with beta, enable experimental Kerberos 5 support.
+		</option>
+		<option name="beta" default="no"> 
+			Enable experimental features.
+		</option>
+
+	</metadata>
+
+	<!-- codelang can be sh,bash,perl,python -->
+	<!-- content is PCDATA so & < > need to be replaced -->
+	<code codelang="sh"> 
+		#!/bin/sh
+		echo "this is just a dummy code since you should have xeta already to install that package"
+	</code>
+
+</xbuild>

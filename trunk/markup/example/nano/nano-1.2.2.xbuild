@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xbuild SYSTEM "http://jupiter.zynot.org/~zllow/XBuilds/dtd/xbuild.dtd">
+<!--
+ Copyright 1999-2003 Gentoo Technologies, Inc.
+ Distributed under the terms of the GNU General Public License v2
+-->
+<xbuild uuid="eb19a986-7bd0-488c-b21f-a67e1b454cfc" ver="1.2.2" proj="70cd4c7b-b920-4668-941e-fd317880d4e6">
+  <metadata>
+    <src>http://www.nano-editor.org/dist/v1.2/nano-1.2.2.tar.gz</src>
+    <license name="GPL-2"/>
+    <usability>
+      <arch name="x86" level="1.0"/>
+      <arch name="ppc" level="1.0"/>
+      <arch name="sparc" level="0.5"/>
+      <arch name="alpha" level="0.5"/>
+      <arch name="mips" level="1.0"/>
+      <arch name="hppa" level="0.5"/>
+      <arch name="arm" level="1.0"/>
+      <arch name="amd64" level="0.5"/>
+    </usability>
+    <dep>
+      build,run {
+        [core,libs]:ncurses &gt;=5.2
+        nls ? ( [core,libs]:gettext )
+        slang ? ( [display,libs]:slang )
+      }
+    </dep>
+    <iuse>nls build spell justify debug slang</iuse>
+    <srcdir>${WORKDIR}/${P}</srcdir>
+  </metadata>
+  <code lang="bash">
+src_unpack() {
+	unpack ${A}
+	cd ${S}
+	epatch ${FILESDIR}/nanohupterm.patch
+	epatch ${FILESDIR}/${PV}-wsconvert.patch
+}
+
+src_compile() {
+	local myconf=&quot;&quot;
+	use build &amp;&amp; myconf=&quot;${myconf} --disable-wrapping-as-root&quot;
+	[ `use ncurses` ] || myconf=&quot;${myconf} `use_with slang`&quot;
+
+	econf \
+		--bindir=/bin \
+		--enable-color \
+		--enable-multibuffer \
+		--enable-nanorc \
+		`use_enable justify` \
+		`use_enable spell` \
+		`use_enable debug` \
+		`use_enable nls` \
+		${myconf} \
+		|| die &quot;configure failed&quot;
+	emake || die
+}
+
+src_install() {
+	make DESTDIR=${D} install || die
+
+	if [ `use build` ] ; then
+		rm -rf ${D}/usr/share
+	else
+		cat ${FILESDIR}/nanorc-* &gt;&gt; nanorc.sample
+		dodoc ChangeLog README nanorc.sample AUTHORS BUGS NEWS TODO
+		dohtml *.html
+		insinto /etc
+		newins nanorc.sample nanorc
+	fi
+
+	dodir /usr/bin
+	dosym ../../bin/nano /usr/bin/nano
+}
+  </code>
+</xbuild>

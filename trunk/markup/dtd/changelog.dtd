@@ -1,0 +1,32 @@
+<!-- Copyright (C) 2003 The Zynot Foundation -->
+<!ELEMENT changelog (logentry+)>
+<!ATTLIST changelog
+	uuid ID #REQUIRED>
+
+<!ELEMENT logentry (objref+, blame, trackerref*, saref*, inforef*, summary, details)>
+<!ATTLIST logentry
+	time CDATA #REQUIRED
+	committer CDATA #REQUIRED> <!-- Who committed the change to SVN? -->
+
+<!ELEMENT objref EMPTY>
+<!ATTLIST objref
+	ref CDATA #REQUIRED> <!-- URI-like address, uuid:356db36a-a5d9-4245-a17c-86ec5dffef7c for instance, or file://ChangeLog -->
+
+<!ELEMENT blame (devref|groupref|externalcontrib)+> <!-- Who is responsible for the change? -->
+
+%maintainersDTD;
+%peopleDTD;
+
+<!ELEMENT trackerref EMPTY>
+<!ATTLIST trackerref
+	item CDATA #REQUIRED
+	tracker CDATA #REQUIRED> <!-- A bug tracker, or a feature request tracker, etc. -- A URI. -->
+
+<!ELEMENT saref EMPTY>
+<!ATTLIST saref
+	uri CDATA #REQUIRED> <!-- A security alert -- A URI. -->
+
+%commonDTD;
+
+<!ELEMENT summary (#PCDATA)>
+<!ELEMENT details (#PCDATA)>

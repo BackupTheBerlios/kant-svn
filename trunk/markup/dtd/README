@@ -1,0 +1,5 @@
+The DTDs in the top level directory are incomplete, do not use them for DOCTYPE declarations.
+
+monolith.dtd is a complete DTD. A monolith is a fully self-contained XBuild repository.
+
+The standalone directory contains complete DTDs for marking up individual files in an XBuild repository.

@@ -1,0 +1,73 @@
+<!-- @depend common.dtd xbcommon.dtd maintainers.dtd licence.dtd -->
+
+<!ELEMENT xbuild (inherit*, hmetadata?, metadata?, preamblecode?, code?)>
+<!ATTLIST xbuild
+	uuid ID #REQUIRED
+	proj %PROJREF; #REQUIRED
+	revision CDATA #REQUIRED
+	schemarev CDATA #REQUIRED
+	type (group | standard | config | abstract) 'standard'> <!-- abstract cannot be used in any way other than inheritance 
+	                                                             group means that the xbuild equals its dependencies, i.e.
+	                                                             when you unmerge a group, you unmerge its dependencies (one
+	                                                             level only). -->
+
+<!-- revision is a integer value, which indicates which XBuild of the same UUID is newer -->
+<!-- schemarev is a dot delimited unsigned integer field -- i.e. 1.0.1 -->
+
+<!-- @reftype XBUILDREF -->
+
+<!ELEMENT inherit EMPTY>
+<!ATTLIST inherit 
+	xbuild %XBUILDREF; #REQUIRED>
+
+<!ELEMENT hmetadata (maintainers?, sdesc?, ldesc?, keywords?)>
+<!ELEMENT metadata (subpkg*, src+, slot?, licensedunder?, rating+, dep*, options*, initialpath?)>
+
+%commonDTD;
+%xbcommonDTD;
+%maintainersDTD;
+
+<!ELEMENT subpkg EMPTY>
+<!ATTLIST subpkg
+	uuid ID #REQUIRED
+	name CDATA #REQUIRED> <!-- ASCII only, must be unique within the XBuild, but not between -->
+
+<!ELEMENT option (#PCDATA)*> <!-- Contents are description -->
+<!ATTLIST option
+	name ID #REQUIRED
+	default (yes|no) 'no'> <!-- name is ASCII only. -->
+
+<!-- An option is analogous to a Portage USE flag -->
+
+<!ENTITY % OPTIONREF 'IDREF'>
+
+<!ELEMENT src (src|uri|base64)>
+<!ATTLIST src
+	type (auto | tbz2 | tgz | zip | plain | noauto) 'auto'
+	unpackto CDATA #IMPLIED
+	if CDATA #IMPLIED> <!-- unpackto is relative to the working directory, if a top-level src element, otherwise, relative to the parent
+                            if is a test, syntax defined in dependency spec, specifically, bool-expression -->
+
+<!ELEMENT slot (dict)> <!-- Take care! Runtime variable substitution is possible.
+                            Syntax defined in dependency spec. -->
+
+<!ELEMENT licensedunder (licenceref | ldisjunction | lconjunction)>
+
+%licenceDTD;
+
+<!ENTITY % DEPSCOPE '(build|install|run|build-install|build-run|install-run|build-install-run)'>
+
+<!ELEMENT dep (#PCDATA)*> <!-- syntax defined in dependency spec. -->
+<!ATTLIST dep
+	scope %DEPSCOPE; 'build-install-run'
+	host CDATA 'xeta-xeta-host'
+	target CDATA 'xeta-xeta-host'>
+
+<!-- Use only one uri, or one base64, or all text, but not any other combination -->
+<!-- syntax rules for each language still apply, but XML-escape '&', '<' and '>' -->
+
+<!ELEMENT preamblecode (uri|base64|#PCDATA)*>
+<!ELEMENT code (uri|base64|#PCDATA)*>
+
+
+

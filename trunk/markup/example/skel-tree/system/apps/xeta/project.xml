@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+This is data shared between all XBuilds in a whole project. A project is a collection of different versions
+of a package and the XBuilds and metadata associated.
+The maintainers contains a dev or group reference. Keep in mind that this MUST be present in the tree-wide
+metadata. Check the tree-info folder out.
+The name is 'the friendly name' for the package. It is the name that user typically refers to the package
+with and will use on the command line. Names are for instance glibc, ncurses or perl. Only lower case is allowed.
+In sdesc we put a one-line description of a package. Take note that you must specify language.
+The ldesc is for long description of a package. Go nuts.
+Keywords is where the package is to be found in the hierarchy. A keyword for firebird could be database or www.
+In this case user will know the package as www:firebird or database:firebird.
+-->
+<proj uuid="632b9-5cc2-4b42-92b9-a0dc42e1ca48">
+	<www>http://www.xeta.org</www>
+	
+	<maintainers> <!-- can be omitted -->
+		<groupref group="zynot-dev"/> 
+		<!-- sequence of groups and developer references.. -->
+	</maintainers>
+	
+	<name>xeta</name>
+
+	<sdesc>
+		<lctext lang="en">A new nice fast and really cool Packagemanager</lctext>
+		<lctext lang="de">Ein neuer schöner schneller und wirklich cooler Packetmanager</lctext>
+	</sdesc>
+
+	<ldesc>
+		<lctext lang="en">
+			Long blabla about the future of Linux networks and 
+			workstation computing, for everyone... Some cool 
+			abbreviations that no-one really understands...</lctext>
+		<lctext lang="de">
+			Viel blabla über die Zukunft von Linuxnetzwerken und 
+			...</lctext>
+	</ldesc>
+	<!-- space delimited keywords, from a fixed vocabulary -->
+	<keywords>system apps pkgmgr</keywords> 
+</proj>
