@@ -1,0 +1,5 @@
+[*] Basic dependency tree generation
+[*] Implement general Tree class
+[ ] Add dependency language
+[ ] Add i18n support with boost::format
+[*] Use autotools instead of scons (Andreas will take this task with pleasure)

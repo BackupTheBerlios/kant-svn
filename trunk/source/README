@@ -1,0 +1,45 @@
+Dependencies:
+
+We use boost::format for type-safe, 
+printf-like string formatting.
+Also, currenttly the database-backend
+is sqlite.
+We use gtkmm for the GUI part. There's
+no switch for configure to disable the 
+GUI at the moment.
+
+To build, do:
+
+sh autogen.sh
+./configure
+make
+
+To test xeta, do:
+
+./xeta <package spec>
+
+Optionally, you can use the -g parameter 
+(after the pacakge specification) to start
+xeta in GUI mode (using gtkmm).
+xeta will build the deptree using the data
+from the xeta.sqlite database. You
+can specify another database in xeta.conf,
+if you like.
+
+There's a xeta.sqlite file with some (very
+little ) test data. It specifies 3 xbuilds:
+
+xeta-1.0.1
+xeta-1.1-beta1
+boost-1.30
+
+In the test data, only xeta-1.0-beta1 has 
+dependencies. It depends on boost-1.30.
+So you'll see 2 packages printed when
+running ./xeta-1.1-beta-1
+
+To build a new xeta.sqlite database, you
+need a xmonolith.xml-style XML file and
+create a sqlite database from it, with
+the xeta_import tool found in 
+/svn/zynot/projects/xeta/trunk/xbuilds/db_import/

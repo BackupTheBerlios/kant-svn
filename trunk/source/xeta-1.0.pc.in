@@ -1,0 +1,11 @@
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+libdir=@libdir@
+includedir=@includedir@
+
+Name: Xeta library
+Description: SDK for all xeta based tools
+Requires: expat boost-1.31
+Version: @VERSION@
+Libs: -L${libdir} -lxeta
+Cflags: -I${includedir}/xeta-1.0 -I${libdir}/xeta-1.0/include
