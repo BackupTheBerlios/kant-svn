@@ -1,0 +1,30 @@
+# German translations for Xeta package
+# German messages for Xeta.
+# Copyright (C) 2004 THE Xeta'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the Xeta package.
+# Andreas Pokorny <apokorny@zynot.org>, 2004.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Xeta 0.0.1\n"
+"Report-Msgid-Bugs-To: http://nopaste.php-q.net/56664\n"
+"POT-Creation-Date: 2004-05-05 01:13+0200\n"
+"PO-Revision-Date: 2004-05-05 00:51+0200\n"
+"Last-Translator: Andreas Pokorny <apokorny@zynot.org>\n"
+"Language-Team: German <de@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=ISO-8859-1\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: src/xeta.cpp:31
+msgid "Package is ambiguous. Possible packages are: \n"
+msgstr "Paket ist zweideutig. Moegliche Pakete sind: \n"
+
+#: src/xeta.cpp:36
+msgid "Exception caught: \""
+msgstr "Ausnahme gefangen: \""
+
+#: src/xeta.cpp:38
+msgid "Unknown exception caught: \""
+msgstr "Unbekannte Ausnahme gefangen: \""
