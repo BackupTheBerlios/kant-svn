@@ -27,7 +27,7 @@
 #ifdef HAVE_CURLPP
 #include "curl.h"
 #endif
-#include "config.h"
+#include "kant_config.h"
 #include <iostream>
 #include <boost/filesystem/path.hpp>
 #include <boost/filesystem/operations.hpp>

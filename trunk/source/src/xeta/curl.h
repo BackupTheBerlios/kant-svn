@@ -21,6 +21,8 @@
 #include "../../config.h"
 #endif 
 
+#ifdef HAVE_CURLPP
+
 #ifndef XETA_CURL_H
 #define XETA_CURL_H
 #include <list>
@@ -35,5 +37,7 @@ class Curl : public FileTransfer
 		virtual void perform();
 };
 }
+#endif
+
 #endif
 

@@ -20,8 +20,8 @@
 
 #ifndef XETA_INFO_H_1901559711
 #define XETA_INFO_H_1901559711
+#include <kant_config.h>
 #include "forwarddecl.h"
-#include "config.h"
 #include <string>
 #include <vector>
 

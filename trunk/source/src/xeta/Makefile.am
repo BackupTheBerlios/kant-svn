@@ -1,5 +1,5 @@
 library_includedir=$(includedir)/xeta-1.0/xeta/xeta
-library_include_HEADERS = config.h \
+library_include_HEADERS = kant_config.h \
 						  exceptions.h \
 						  forwarddecl.h \
 						  info.h \
@@ -15,7 +15,7 @@ library_include_HEADERS = config.h \
 
 lib_LTLIBRARIES = libxeta.la
 
-libxeta_la_SOURCES = config.cpp \
+libxeta_la_SOURCES = kant_config.cpp \
 					 curl.cpp \
 					 debug.cpp \
 					 depparser.cpp \

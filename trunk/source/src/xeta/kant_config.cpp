@@ -1,4 +1,4 @@
-#include "config.h"
+#include "kant_config.h"
 #include "exceptions.h"
 #include "../gettext.h"
 #include <boost/format.hpp>
