@@ -55,27 +55,48 @@ AC_ARG_WITH(expat,
 
 AC_SUBST(EXPAT_PREFIX)
 AC_CHECK_LIB(expat, XML_ParserCreate, , [AC_MSG_ERROR("Could not find expat in ${EXPAT_PREFIX}.")] , ["-L${EXPAT_PREFIX}/lib/"] )
+AC_MSG_CHECKING( for expat-version >= 1.95.8)
+AC_TRY_LINK(#include <expat.h>,
+if (XML_ERROR_UNBOUND_PREFIX == 1){
+  1==1;
+},
+AC_MSG_RESULT(yes),
+AC_MSG_ERROR(you need to upgrade expat)
+)
 
 EXPAT_LIBS="-L${EXPAT_PREFIX}/lib/ -lexpat"
 EXPAT_CFLAGS="-I${EXPAT_PREFIX}/include"
 AC_SUBST(EXPAT_LIBS)
 AC_SUBST(EXPAT_CFLAGS)
 
-# Checking for libcurl
-CURLPP_LIBS=""
-CURLPP_CFLAGS=""
-if test -e /usr/bin/curlpp-config
-then
-	CURLPP_CFLAGS=`curlpp-config --cflags`
-	CURLPP_LIBS=`curlpp-config --libs`
-	echo "CURLPP_LIBS is $CURLPP_LIBS"
-	echo "CURLPP_CFLAGS is $CURLPP_CFLAGS"
-  AC_DEFINE(HAVE_CURLPP,1,["Curlpp is installed"])
-else
-	AC_MSG_WARN("Could not find curlpp-config, curl support disabled")
+AC_MSG_CHECKING(if curlpp-support should be enabled)
+AC_ARG_ENABLE(curlpp,
+[  --enable-curlpp     compile with curlpp-support],
+        curlppsupport=$enableval
+        AC_MSG_RESULT(yes),
+        curlppsupport=no
+        AC_MSG_RESULT(no)
+        )
+        
+if test "$curlppsupport" != no
+then 
+        # Checking for libcurl
+        CURLPP_LIBS=""
+        CURLPP_CFLAGS=""
+        if test -e /usr/bin/curlpp-config
+        then
+	        CURLPP_CFLAGS=`curlpp-config --cflags`
+        	CURLPP_LIBS=`curlpp-config --libs`
+        	echo "CURLPP_LIBS is $CURLPP_LIBS"
+        	echo "CURLPP_CFLAGS is $CURLPP_CFLAGS"
+          AC_DEFINE(HAVE_CURLPP,1,["Curlpp is installed"])
+        else
+        	AC_MSG_WARN("Could not find curlpp-config, curl support disabled")
+        fi
+
+        AC_SUBST(CURLPP_CFLAGS)
+        AC_SUBST(CURLPP_LIBS)
 fi
-AC_SUBST(CURLPP_CFLAGS)
-AC_SUBST(CURLPP_LIBS)
 
 
 # Typesizes used in xeta_types.h
